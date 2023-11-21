@@ -9,6 +9,7 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
     //val card = DeckOfCards()
+    val playClass = PlayActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -18,8 +19,11 @@ class MainActivity : AppCompatActivity() {
         playButton.setOnClickListener{
 
             val intent = Intent(this,PlayActivity::class.java)
-
             startActivity(intent)
+
+
+
+
 
 
         }
