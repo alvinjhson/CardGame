@@ -15,8 +15,7 @@
         app:layout_constraintHorizontal_bias="0.681"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.092"
-        app:srcCompat="@drawable/queen_of_diamonds2" />
+        app:layout_constraintVertical_bias="0.092" />
 
     <ImageView
         android:id="@+id/dealerCard1"
@@ -27,8 +26,7 @@
         app:layout_constraintHorizontal_bias="0.242"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.092"
-        app:srcCompat="@drawable/queen_of_diamonds2" />
+        app:layout_constraintVertical_bias="0.092" />
 
     <ImageView
         android:id="@+id/playerCard2"
@@ -39,20 +37,18 @@
         app:layout_constraintHorizontal_bias="0.649"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.777"
-        app:srcCompat="@drawable/queen_of_diamonds2" />
+        app:layout_constraintVertical_bias="0.777" />
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="160dp"
-        android:layout_height="44dp"
-        android:text="TextView"
+        android:id="@+id/textViewPlayer"
+        android:layout_width="33dp"
+        android:layout_height="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.302"
+        app:layout_constraintHorizontal_bias="0.074"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.914" />
+        app:layout_constraintVertical_bias="0.813" />
 
     <ImageView
         android:id="@+id/playerCard1"
@@ -63,6 +59,16 @@
         app:layout_constraintHorizontal_bias="0.242"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.777"
-        app:srcCompat="@drawable/queen_of_diamonds2" />
+        app:layout_constraintVertical_bias="0.777" />
+
+    <TextView
+        android:id="@+id/textViewDealer"
+        android:layout_width="24dp"
+        android:layout_height="19dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.073" />
 </androidx.constraintlayout.widget.ConstraintLayout>
