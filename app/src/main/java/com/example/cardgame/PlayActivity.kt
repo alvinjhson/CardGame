@@ -1,5 +1,6 @@
 package com.example.cardgame
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -29,6 +30,11 @@ class PlayActivity : AppCompatActivity() {
     var dealerValue : Int = 0
     var nextCardIndex : Int = 0
     var nextDealerCardIndex : Int = 0
+    var gameOver : Boolean = false
+    var playerWins = 0
+    var dealerWins = 0
+    var draws = 0
+
 
 
     lateinit var playerCards: List<ImageView>
@@ -57,22 +63,72 @@ class PlayActivity : AppCompatActivity() {
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
         dealerCards = listOf(dealerCard1,dealerCard2,dealerCard3,dealerCard4,dealerCard5)
 
-        playBlackJack()
+            playBlackJack()
+
+
+
 
 
     }
     fun playBlackJack(){
         val hitButton = findViewById<Button>(R.id.hitButton)
         val standButton = findViewById<Button>(R.id.standButton)
-        firstCards()
-        hitButton.setOnClickListener{
-            hit()
-        }
-        standButton.setOnClickListener{
-            stand()
-            giveOutDealerCard()
-        }
+            firstCards()
+            hitButton.setOnClickListener{
+                hit()
+            }
+            standButton.setOnClickListener{
+                stand()
+                giveOutDealerCard()
+            }
+    }
 
+
+    fun checkBlackJack() {
+        if (playerValue == 21 || dealerValue  > 21){
+            gameOver = true
+            resetGame()
+        } else if (dealerValue == 21 || playerValue > 21){
+            gameOver = true
+            resetGame()
+        }
+    }
+    fun checkClosestTO21() {
+        val playerDif = Math.abs(21 - playerValue)
+        val dealerDif = Math.abs(21 - dealerValue)
+        when {
+            playerDif < dealerDif -> {
+                playerWins++
+                gameOver = true
+                resetGame()
+            }
+            dealerDif < playerDif -> {
+                dealerWins++
+                gameOver = true
+                resetGame()
+            }
+        }
+    }
+    fun over21() {
+        if (dealerValue > 21 && playerValue < 21) {
+            gameOver = true
+            playerWins++
+            resetGame()
+        }  else {
+            if (playerValue > 21 && dealerValue < 21) {
+                gameOver = true
+               dealerWins++
+                resetGame()
+            }
+        }
+    }
+    fun checkDraw(){
+        if (playerValue == dealerValue) {
+            gameOver = true
+            draws++
+            resetGame()
+
+        }
     }
     fun firstCards(){
         Handler(Looper.getMainLooper()).postDelayed({
@@ -91,45 +147,46 @@ class PlayActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             setCardImage(dealerCard2,20,20)
         }, 2000)
-
     }
     fun giveOutDealerCard() {
         Handler(Looper.getMainLooper()).postDelayed({
-                if (dealerValue < 16) {
-                    do {
-                        if (nextDealerCardIndex < dealerCards.size) {
-                            dealCard(dealerCards[nextDealerCardIndex])
-                            nextDealerCardIndex++
-                        }
-                    } while (dealerValue < 16)
-                }
-
+            if (dealerValue < 16) {
+                do {
+                    if (nextDealerCardIndex < dealerCards.size) {
+                        dealCard(dealerCards[nextDealerCardIndex])
+                        nextDealerCardIndex++
+                        over21()
+                    }
+                } while (dealerValue < 16)
+            }
+            checkClosestTO21()
+            checkDraw()
         },1000)
 
     }
     fun hit() {
-        //dealCard(dealerCard2)
         if (playerValue < 21) {
             if (nextCardIndex < playerCards.size) {
                 dealCard(playerCards[nextCardIndex])
                 nextCardIndex++
+                over21()
             }
         }
 
     }
     fun stand() {
-
-        if (nextDealerCardIndex < dealerCards.size) {
-            dealCard(dealerCards[nextDealerCardIndex])
-            nextDealerCardIndex++
+        if (dealerValue < 16) {
+            if (nextDealerCardIndex < dealerCards.size) {
+                dealCard(dealerCards[nextDealerCardIndex])
+                nextDealerCardIndex++
+                checkBlackJack()
+                checkDraw()
+            }
         }
-
     }
 
     fun dealCard(playerCard: ImageView) {
-
         val allCards = playerCards + dealerCards
-
         do {
             val randomTypePlayer = (0..3).random()
             val randomValuePlayer = (0..12).random()
@@ -258,6 +315,28 @@ class PlayActivity : AppCompatActivity() {
             } else{
                 calculateDealerCardValue(value)
             }
+
+    }
+
+    fun resetGame() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            playerValue = 0
+            dealerValue = 0
+            nextDealerCardIndex = 0
+            nextCardIndex = 0
+            //gameOver = false
+            for (imageView in playerCards) {
+                imageView.setImageResource(0)
+            }
+            for (imageView in dealerCards) {
+                imageView.setImageResource(0)
+            }
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }, 2000 )
+
+
+
 
     }
 
