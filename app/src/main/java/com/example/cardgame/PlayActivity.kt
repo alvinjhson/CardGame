@@ -1,13 +1,16 @@
 package com.example.cardgame
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import kotlin.math.round
 
 class PlayActivity : AppCompatActivity() {
 
@@ -25,7 +28,7 @@ class PlayActivity : AppCompatActivity() {
     lateinit var dealerCard4 : ImageView
     lateinit var dealerCard5 : ImageView
 
-    val card = DeckOfCards(1,1)
+
     var playerValue : Int = 0
     var dealerValue : Int = 0
     var nextCardIndex : Int = 0
@@ -34,6 +37,11 @@ class PlayActivity : AppCompatActivity() {
     var playerWins = 0
     var dealerWins = 0
     var draws = 0
+    var roundsPlayed = 0
+
+
+
+
 
 
 
@@ -60,15 +68,40 @@ class PlayActivity : AppCompatActivity() {
         dealerCard5 = findViewById(R.id.dealerCard5)
         val hitButton = findViewById<Button>(R.id.hitButton)
         val standButton = findViewById<Button>(R.id.standButton)
+        val homeButton = findViewById<Button>(R.id.homeButton2)
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
         dealerCards = listOf(dealerCard1,dealerCard2,dealerCard3,dealerCard4,dealerCard5)
+        val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        playerWins = sharedPref.getInt("playerWins", 0)
+        dealerWins = sharedPref.getInt("dealerWins", 0)
+        draws = sharedPref.getInt("draws", 0)
+        roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
 
             playBlackJack()
+            homeButton.setOnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
 
 
 
 
 
+
+
+
+
+    }
+    override fun onStop() {
+        super.onStop()
+        val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        with (sharedPref.edit()) {
+            putInt("playerWins", playerWins)
+            putInt("dealerWins",dealerWins)
+            putInt("draws",draws)
+            putInt("roundsPlayed",roundsPlayed)
+            apply()
+        }
     }
     fun playBlackJack(){
         val hitButton = findViewById<Button>(R.id.hitButton)
@@ -78,7 +111,6 @@ class PlayActivity : AppCompatActivity() {
                 hit()
             }
             standButton.setOnClickListener{
-                stand()
                 giveOutDealerCard()
             }
     }
@@ -96,16 +128,19 @@ class PlayActivity : AppCompatActivity() {
     fun checkClosestTO21() {
         val playerDif = Math.abs(21 - playerValue)
         val dealerDif = Math.abs(21 - dealerValue)
-        when {
-            playerDif < dealerDif -> {
-                playerWins++
-                gameOver = true
-                resetGame()
-            }
-            dealerDif < playerDif -> {
-                dealerWins++
-                gameOver = true
-                resetGame()
+        if (dealerValue < 21 ||  playerValue < 21) {
+            when {
+                playerDif < dealerDif -> {
+                    playerWins++
+                    gameOver = true
+                    resetGame()
+                }
+
+                dealerDif < playerDif -> {
+                    dealerWins++
+                    gameOver = true
+                    resetGame()
+                }
             }
         }
     }
@@ -135,7 +170,6 @@ class PlayActivity : AppCompatActivity() {
             dealCard(playerCards[nextCardIndex])
             nextCardIndex++
         }, 500)
-
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(dealerCards[nextDealerCardIndex])
             nextDealerCardIndex++
@@ -156,6 +190,7 @@ class PlayActivity : AppCompatActivity() {
                         dealCard(dealerCards[nextDealerCardIndex])
                         nextDealerCardIndex++
                         over21()
+                        checkBlackJack()
                     }
                 } while (dealerValue < 16)
             }
@@ -174,16 +209,7 @@ class PlayActivity : AppCompatActivity() {
         }
 
     }
-    fun stand() {
-        if (dealerValue < 16) {
-            if (nextDealerCardIndex < dealerCards.size) {
-                dealCard(dealerCards[nextDealerCardIndex])
-                nextDealerCardIndex++
-                checkBlackJack()
-                checkDraw()
-            }
-        }
-    }
+
 
     fun dealCard(playerCard: ImageView) {
         val allCards = playerCards + dealerCards
@@ -319,11 +345,15 @@ class PlayActivity : AppCompatActivity() {
     }
 
     fun resetGame() {
+
         Handler(Looper.getMainLooper()).postDelayed({
             playerValue = 0
             dealerValue = 0
             nextDealerCardIndex = 0
             nextCardIndex = 0
+            roundsPlayed++
+            onStop()
+            Log.d("resetGame", "resetGame called")
             //gameOver = false
             for (imageView in playerCards) {
                 imageView.setImageResource(0)
@@ -333,6 +363,7 @@ class PlayActivity : AppCompatActivity() {
             }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+
         }, 2000 )
 
 
