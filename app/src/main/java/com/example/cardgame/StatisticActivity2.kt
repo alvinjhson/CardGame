@@ -36,9 +36,6 @@ class StatisticActivity2 : AppCompatActivity() {
                 startActivity(intent)
             }
 
-
-
-
     }
     fun showPlayerWins(playerWins: Int) {
         val personalWins = playerWins.toString()

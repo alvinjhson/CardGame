@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -16,6 +17,7 @@ class PlayActivity : AppCompatActivity() {
 
     lateinit var textViewPlayer : TextView
     lateinit var textViewDealer : TextView
+    lateinit var textViewWinLose : TextView
 
     lateinit var playerCard1 : ImageView
     lateinit var playerCard2 : ImageView
@@ -28,34 +30,27 @@ class PlayActivity : AppCompatActivity() {
     lateinit var dealerCard4 : ImageView
     lateinit var dealerCard5 : ImageView
 
-
     var playerValue : Int = 0
     var dealerValue : Int = 0
     var nextCardIndex : Int = 0
     var nextDealerCardIndex : Int = 0
     var gameOver : Boolean = false
+    var winner : Boolean = false
+    var draw : Boolean = false
     var playerWins = 0
     var dealerWins = 0
     var draws = 0
     var roundsPlayed = 0
 
-
-
-
-
-
-
+    val takenCards = mutableListOf<Pair<Int, Int>>()
     lateinit var playerCards: List<ImageView>
     lateinit var dealerCards: List<ImageView>
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
         textViewPlayer = findViewById(R.id.textViewPlayer)
         textViewDealer = findViewById(R.id.textViewDealer)
+        textViewWinLose = findViewById(R.id.winLoseText)
         playerCard1 = findViewById(R.id.playerCard1)
         playerCard2 = findViewById(R.id.playerCard2)
         playerCard3 = findViewById(R.id.playerCard3)
@@ -69,28 +64,25 @@ class PlayActivity : AppCompatActivity() {
         val hitButton = findViewById<Button>(R.id.hitButton)
         val standButton = findViewById<Button>(R.id.standButton)
         val homeButton = findViewById<Button>(R.id.homeButton2)
+        val dealButton = findViewById<Button>(R.id.dealButton)
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
         dealerCards = listOf(dealerCard1,dealerCard2,dealerCard3,dealerCard4,dealerCard5)
+        //val takenCards = mutableListOf<Pair<Int, Int>>()
         val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         playerWins = sharedPref.getInt("playerWins", 0)
         dealerWins = sharedPref.getInt("dealerWins", 0)
         draws = sharedPref.getInt("draws", 0)
         roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
-
+        dealButton.setOnClickListener {
             playBlackJack()
-            homeButton.setOnClickListener {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }
-
-
-
-
-
-
-
-
-
+            dealButton.visibility = View.GONE
+            textViewWinLose.visibility = View.GONE
+            draw = false
+        }
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
     override fun onStop() {
         super.onStop()
@@ -106,22 +98,24 @@ class PlayActivity : AppCompatActivity() {
     fun playBlackJack(){
         val hitButton = findViewById<Button>(R.id.hitButton)
         val standButton = findViewById<Button>(R.id.standButton)
-            firstCards()
-            hitButton.setOnClickListener{
-                hit()
-            }
-            standButton.setOnClickListener{
-                giveOutDealerCard()
-            }
+        firstCards()
+        hitButton.setOnClickListener{
+            hit()
+        }
+        standButton.setOnClickListener{
+            giveOutDealerCard()
+        }
     }
-
-
     fun checkBlackJack() {
-        if (playerValue == 21 || dealerValue  > 21){
+        if (playerValue == 21 && dealerValue  > 21){
+            playerWins++
             gameOver = true
+            winner = true
             resetGame()
-        } else if (dealerValue == 21 || playerValue > 21){
+        } else if (dealerValue == 21 && playerValue > 21){
             gameOver = true
+            dealerWins++
+            winner = false
             resetGame()
         }
     }
@@ -133,12 +127,13 @@ class PlayActivity : AppCompatActivity() {
                 playerDif < dealerDif -> {
                     playerWins++
                     gameOver = true
+                    winner = true
                     resetGame()
                 }
-
                 dealerDif < playerDif -> {
                     dealerWins++
                     gameOver = true
+                    winner = false
                     resetGame()
                 }
             }
@@ -147,12 +142,14 @@ class PlayActivity : AppCompatActivity() {
     fun over21() {
         if (dealerValue > 21 && playerValue < 21) {
             gameOver = true
+            winner = true
             playerWins++
             resetGame()
         }  else {
             if (playerValue > 21 && dealerValue < 21) {
                 gameOver = true
-               dealerWins++
+                winner = false
+                dealerWins++
                 resetGame()
             }
         }
@@ -161,8 +158,8 @@ class PlayActivity : AppCompatActivity() {
         if (playerValue == dealerValue) {
             gameOver = true
             draws++
+            draw = true
             resetGame()
-
         }
     }
     fun firstCards(){
@@ -179,7 +176,7 @@ class PlayActivity : AppCompatActivity() {
             nextCardIndex++
         }, 1500)
         Handler(Looper.getMainLooper()).postDelayed({
-            setCardImage(dealerCard2,20,20)
+            setCardImage(dealerCard2, Pair(20, 20))
         }, 2000)
     }
     fun giveOutDealerCard() {
@@ -207,50 +204,44 @@ class PlayActivity : AppCompatActivity() {
                 over21()
             }
         }
-
     }
-
-
     fun dealCard(playerCard: ImageView) {
-        val allCards = playerCards + dealerCards
+        var card: Pair<Int, Int>
         do {
             val randomTypePlayer = (0..3).random()
             val randomValuePlayer = (0..12).random()
-            setCardImage(playerCard, randomTypePlayer, randomValuePlayer)
-        } while (!areAllCardsUnique(allCards))
+            card = Pair(randomTypePlayer, randomValuePlayer)
+        } while (card in takenCards)
+        takenCards.add(card)
+        setCardImage(playerCard, card)
+        val value = card.second
+        if (playerCard == playerCard1 || playerCard == playerCard2 || playerCard == playerCard3 || playerCard == playerCard4 || playerCard == playerCard5) {
+            calculatePlayerCardValue(value)
+        } else {
+            calculateDealerCardValue(value)
+        }
     }
 
-    fun areAllCardsUnique(cards: List<ImageView>): Boolean {
-        for (i in 0 until cards.size - 1) {
-            for (j in i + 1 until cards.size) {
-                if (cards[i] == cards[j]) {
-                    return false
-                }
-            }
-        }
-        return true
-    }
     fun calculatePlayerCardValue(value: Int)  {
 
-            playerValue = when (value) {
-                0 -> playerValue + 2
-                1 -> playerValue + 3
-                2 -> playerValue + 4
-                3 -> playerValue + 5
-                4 -> playerValue + 6
-                5 -> playerValue + 7
-                6 -> playerValue + 8
-                7 -> playerValue + 9
-                8 -> playerValue + 10
-                9 -> playerValue + 10
-                10 -> playerValue + 10
-                11 -> playerValue + 10
-                12 -> playerValue + 11
-                else -> playerValue
-            }
+        playerValue = when (value) {
+            0 -> playerValue + 2
+            1 -> playerValue + 3
+            2 -> playerValue + 4
+            3 -> playerValue + 5
+            4 -> playerValue + 6
+            5 -> playerValue + 7
+            6 -> playerValue + 8
+            7 -> playerValue + 9
+            8 -> playerValue + 10
+            9 -> playerValue + 10
+            10 -> playerValue + 10
+            11 -> playerValue + 10
+            12 -> playerValue + 11
+            else -> playerValue
+        }
         textViewPlayer.text = playerValue.toString()
     }
-
     fun calculateDealerCardValue(value: Int){
         dealerValue = when (value) {
             0 -> dealerValue + 2
@@ -269,14 +260,9 @@ class PlayActivity : AppCompatActivity() {
             else -> dealerValue
         }
         textViewDealer.text = dealerValue.toString()
-
-
-
     }
-
-
-    fun setCardImage(playerCard: ImageView, type: Int, value: Int,) {
-        val imageResourceId = when (Pair(type, value)) {
+    fun setCardImage(playerCard: ImageView, card: Pair<Int, Int>) {
+        val imageResourceId = when (card) {
             Pair(0, 0) -> R.drawable._2_of_clubs
             Pair(0, 1) -> R.drawable._3_of_clubs
             Pair(0, 2) -> R.drawable._4_of_clubs
@@ -336,40 +322,44 @@ class PlayActivity : AppCompatActivity() {
             else -> R.drawable.ic_launcher_foreground
         }
         playerCard.setImageResource(imageResourceId)
-            if (playerCard == playerCard1 || playerCard == playerCard2 || playerCard == playerCard3|| playerCard == playerCard4|| playerCard == playerCard5) {
-                calculatePlayerCardValue(value)
-            } else{
-                calculateDealerCardValue(value)
-            }
-
     }
+
+    fun winLoseText() {
+        if (draw){
+            textViewWinLose.text = "Draw"
+
+        }
+       else if (winner){
+            textViewWinLose.text = "You Win"
+        } else{
+            textViewWinLose.text = "You Lost"
+        }
+    }
+
 
     fun resetGame() {
 
         Handler(Looper.getMainLooper()).postDelayed({
-            playerValue = 0
-            dealerValue = 0
+            val dealButton = findViewById<Button>(R.id.dealButton)
+            winLoseText()
+            textViewWinLose.visibility = View.VISIBLE
             nextDealerCardIndex = 0
             nextCardIndex = 0
             roundsPlayed++
             onStop()
             Log.d("resetGame", "resetGame called")
-            //gameOver = false
             for (imageView in playerCards) {
                 imageView.setImageResource(0)
             }
             for (imageView in dealerCards) {
                 imageView.setImageResource(0)
             }
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-
-        }, 2000 )
-
-
-
-
+            playerValue = 0
+            dealerValue = 0
+            takenCards.clear()
+            dealButton.visibility = View.VISIBLE
+        }, 2000)
     }
-
-
 }
+
+
