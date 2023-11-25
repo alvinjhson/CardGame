@@ -42,7 +42,9 @@ class PlayActivity : AppCompatActivity() {
     var draws = 0
     var roundsPlayed = 0
 
-    val takenCards = mutableListOf<Pair<Int, Int>>()
+    val playerTakenCards = mutableListOf<Pair<Int, Int>>()
+    val dealerTakenCards = mutableListOf<Pair<Int, Int>>()
+
     lateinit var playerCards: List<ImageView>
     lateinit var dealerCards: List<ImageView>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,14 +213,29 @@ class PlayActivity : AppCompatActivity() {
             val randomTypePlayer = (0..3).random()
             val randomValuePlayer = (0..12).random()
             card = Pair(randomTypePlayer, randomValuePlayer)
-        } while (card in takenCards)
-        takenCards.add(card)
+        } while (card in playerTakenCards || card in dealerTakenCards)
+        if (playerCard == playerCard1 || playerCard == playerCard2 || playerCard == playerCard3 || playerCard == playerCard4 || playerCard == playerCard5) {
+            playerTakenCards.add(card)
+        } else {
+            dealerTakenCards.add(card)
+        }
         setCardImage(playerCard, card)
         val value = card.second
         if (playerCard == playerCard1 || playerCard == playerCard2 || playerCard == playerCard3 || playerCard == playerCard4 || playerCard == playerCard5) {
             calculatePlayerCardValue(value)
         } else {
             calculateDealerCardValue(value)
+        }
+    }
+
+    fun adjustAceValue() {
+        if (playerValue  > 21 && playerTakenCards.any { it.second == 12}){
+            playerValue -= 10
+            }
+    }
+    fun dealerAdjustAceValue() {
+        if (dealerValue  > 21 && dealerTakenCards.any { it.second == 12}){
+            dealerValue -= 10
         }
     }
 
@@ -237,9 +254,10 @@ class PlayActivity : AppCompatActivity() {
             9 -> playerValue + 10
             10 -> playerValue + 10
             11 -> playerValue + 10
-            12 -> playerValue + 11
+            12 -> if (playerValue + 11 > 21) playerValue + 1 else playerValue + 11
             else -> playerValue
         }
+        adjustAceValue()
         textViewPlayer.text = playerValue.toString()
     }
     fun calculateDealerCardValue(value: Int){
@@ -256,9 +274,10 @@ class PlayActivity : AppCompatActivity() {
             9 -> dealerValue + 10
             10 -> dealerValue + 10
             11 -> dealerValue + 10
-            12 -> dealerValue + 11
+            12 -> if (dealerValue + 11 > 21) dealerValue + 1 else dealerValue + 11
             else -> dealerValue
         }
+        dealerAdjustAceValue()
         textViewDealer.text = dealerValue.toString()
     }
     fun setCardImage(playerCard: ImageView, card: Pair<Int, Int>) {
@@ -356,7 +375,8 @@ class PlayActivity : AppCompatActivity() {
             }
             playerValue = 0
             dealerValue = 0
-            takenCards.clear()
+            playerTakenCards.clear()
+            dealerTakenCards.clear()
             dealButton.visibility = View.VISIBLE
         }, 2000)
     }
