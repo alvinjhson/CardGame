@@ -42,8 +42,10 @@ class PlayActivity : AppCompatActivity() {
     var draws = 0
     var roundsPlayed = 0
 
-    val playerTakenCards = mutableListOf<Pair<Int, Int>>()
-    val dealerTakenCards = mutableListOf<Pair<Int, Int>>()
+    val playerTakenCards = mutableListOf<Triple<Int, Int,Boolean>>()
+    val dealerTakenCards = mutableListOf<Triple<Int, Int,Boolean>>()
+
+
 
     lateinit var playerCards: List<ImageView>
     lateinit var dealerCards: List<ImageView>
@@ -78,6 +80,8 @@ class PlayActivity : AppCompatActivity() {
         dealButton.setOnClickListener {
             playBlackJack()
             dealButton.visibility = View.GONE
+            hitButton.setEnabled(false)
+            standButton.setEnabled(false)
             textViewWinLose.visibility = View.GONE
             draw = false
         }
@@ -106,6 +110,8 @@ class PlayActivity : AppCompatActivity() {
         }
         standButton.setOnClickListener{
             giveOutDealerCard()
+            hitButton.setEnabled(false)
+            standButton.setEnabled(false)
         }
     }
     fun checkBlackJack() {
@@ -165,6 +171,8 @@ class PlayActivity : AppCompatActivity() {
         }
     }
     fun firstCards(){
+        val hitButton = findViewById<Button>(R.id.hitButton)
+        val standButton = findViewById<Button>(R.id.standButton)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(playerCards[nextCardIndex])
             nextCardIndex++
@@ -178,25 +186,24 @@ class PlayActivity : AppCompatActivity() {
             nextCardIndex++
         }, 1500)
         Handler(Looper.getMainLooper()).postDelayed({
-            setCardImage(dealerCard2, Pair(20, 20))
+            setCardImage(dealerCard2, Triple(20, 20,true))
+            hitButton.setEnabled(true)
+            standButton.setEnabled(true)
         }, 2000)
     }
     fun giveOutDealerCard() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (dealerValue < 16) {
-                do {
-                    if (nextDealerCardIndex < dealerCards.size) {
-                        dealCard(dealerCards[nextDealerCardIndex])
-                        nextDealerCardIndex++
-                        over21()
-                        checkBlackJack()
-                    }
-                } while (dealerValue < 16)
-            }
+        if (dealerValue < 16 && nextDealerCardIndex < dealerCards.size) {
+            dealCard(dealerCards[nextDealerCardIndex])
+            nextDealerCardIndex++
+            over21()
+            checkBlackJack()
+            Handler(Looper.getMainLooper()).postDelayed({
+                giveOutDealerCard()
+            }, 1000)
+        } else {
             checkClosestTO21()
             checkDraw()
-        },1000)
-
+        }
     }
     fun hit() {
         if (playerValue < 21) {
@@ -208,11 +215,12 @@ class PlayActivity : AppCompatActivity() {
         }
     }
     fun dealCard(playerCard: ImageView) {
-        var card: Pair<Int, Int>
+        var card: Triple<Int, Int,Boolean>
         do {
             val randomTypePlayer = (0..3).random()
             val randomValuePlayer = (0..12).random()
-            card = Pair(randomTypePlayer, randomValuePlayer)
+            val usedAce = true
+            card = Triple(randomTypePlayer, randomValuePlayer,usedAce)
         } while (card in playerTakenCards || card in dealerTakenCards)
         if (playerCard == playerCard1 || playerCard == playerCard2 || playerCard == playerCard3 || playerCard == playerCard4 || playerCard == playerCard5) {
             playerTakenCards.add(card)
@@ -221,26 +229,74 @@ class PlayActivity : AppCompatActivity() {
         }
         setCardImage(playerCard, card)
         val value = card.second
+
         if (playerCard == playerCard1 || playerCard == playerCard2 || playerCard == playerCard3 || playerCard == playerCard4 || playerCard == playerCard5) {
             calculatePlayerCardValue(value)
         } else {
             calculateDealerCardValue(value)
         }
     }
+    fun adjust1AceValue() {
+        if (playerValue > 21) {
+            val index = playerTakenCards.indexOfFirst { it.second == 12 && it.third == true }
 
-    fun adjustAceValue() {
-        if (playerValue  > 21 && playerTakenCards.any { it.second == 12}){
-            playerValue -= 10
+            if (index != -1) {
+                playerValue -= 10
+                playerTakenCards[index] = Triple(
+                    playerTakenCards[index].first,
+                    playerTakenCards[index].second, false
+                )
             }
+        }
     }
-    fun dealerAdjustAceValue() {
-        if (dealerValue  > 21 && dealerTakenCards.any { it.second == 12}){
-            dealerValue -= 10
+   fun dealerAdjustAceValue() {
+       if (dealerValue > 21) {
+           val index = dealerTakenCards.indexOfFirst { it.second == 12 && it.third == true }
+
+           if (index != -1) {
+               dealerValue -= 10
+               dealerTakenCards[index] = Triple(
+                  dealerTakenCards[index].first,
+                   dealerTakenCards[index].second, false
+               )
+           }
+       }
+   }
+    fun dealerAce(): Int {
+        val index = dealerTakenCards.indexOfFirst { it.second == 12 && it.third == true }
+        return if (dealerValue + 11 > 21 ) {
+            if (index != -1) {
+                dealerTakenCards[index] = Triple(
+                    dealerTakenCards[index].first,
+                    dealerTakenCards[index].second, false
+                )
+            }
+            1
+        } else if (dealerValue + 11 <= 21 ) {
+            11
+        } else {
+            0
+        }
+    }
+
+    fun playerAce(): Int {
+        val index = playerTakenCards.indexOfFirst { it.second == 12 && it.third == true }
+        return if (playerValue + 11 > 21 ) {
+            if (index != -1) {
+                playerTakenCards[index] = Triple(
+                    playerTakenCards[index].first,
+                    playerTakenCards[index].second, false
+                )
+            }
+            1
+        } else if (playerValue + 11 <= 21 ) {
+            11
+        } else {
+            0
         }
     }
 
     fun calculatePlayerCardValue(value: Int)  {
-
         playerValue = when (value) {
             0 -> playerValue + 2
             1 -> playerValue + 3
@@ -254,10 +310,10 @@ class PlayActivity : AppCompatActivity() {
             9 -> playerValue + 10
             10 -> playerValue + 10
             11 -> playerValue + 10
-            12 -> if (playerValue + 11 > 21) playerValue + 1 else playerValue + 11
+            12 -> playerValue + playerAce()
             else -> playerValue
         }
-        adjustAceValue()
+        adjust1AceValue()
         textViewPlayer.text = playerValue.toString()
     }
     fun calculateDealerCardValue(value: Int){
@@ -274,70 +330,70 @@ class PlayActivity : AppCompatActivity() {
             9 -> dealerValue + 10
             10 -> dealerValue + 10
             11 -> dealerValue + 10
-            12 -> if (dealerValue + 11 > 21) dealerValue + 1 else dealerValue + 11
+            12 -> dealerValue + dealerAce()
             else -> dealerValue
         }
         dealerAdjustAceValue()
         textViewDealer.text = dealerValue.toString()
     }
-    fun setCardImage(playerCard: ImageView, card: Pair<Int, Int>) {
+    fun setCardImage(playerCard: ImageView, card: Triple<Int, Int, Boolean>) {
         val imageResourceId = when (card) {
-            Pair(0, 0) -> R.drawable._2_of_clubs
-            Pair(0, 1) -> R.drawable._3_of_clubs
-            Pair(0, 2) -> R.drawable._4_of_clubs
-            Pair(0, 3) -> R.drawable._5_of_clubs
-            Pair(0, 4) -> R.drawable._6_of_clubs
-            Pair(0, 5) -> R.drawable._7_of_clubs
-            Pair(0, 6) -> R.drawable._8_of_clubs
-            Pair(0, 7) -> R.drawable._9_of_clubs
-            Pair(0, 8) -> R.drawable._10_of_clubs
-            Pair(0, 9) -> R.drawable.jack_of_clubs2
-            Pair(0, 10) -> R.drawable.queen_of_clubs2
-            Pair(0, 11) -> R.drawable.king_of_clubs2
-            Pair(0, 12) -> R.drawable.ace_of_clubs
+            Triple(0, 0, true) -> R.drawable._2_of_clubs
+            Triple(0, 1, true) -> R.drawable._3_of_clubs
+            Triple(0, 2, true) -> R.drawable._4_of_clubs
+            Triple(0, 3, true) -> R.drawable._5_of_clubs
+            Triple(0, 4, true) -> R.drawable._6_of_clubs
+            Triple(0, 5, true) -> R.drawable._7_of_clubs
+            Triple(0, 6, true) -> R.drawable._8_of_clubs
+            Triple(0, 7, true) -> R.drawable._9_of_clubs
+            Triple(0, 8, true) -> R.drawable._10_of_clubs
+            Triple(0, 9, true) -> R.drawable.jack_of_clubs2
+            Triple(0, 10, true) -> R.drawable.queen_of_clubs2
+            Triple(0, 11, true) -> R.drawable.king_of_clubs2
+            Triple(0, 12, true) -> R.drawable.ace_of_clubs
 
-            Pair(1, 0) -> R.drawable._2_of_spades
-            Pair(1, 1) -> R.drawable._3_of_spades
-            Pair (1,2) -> R.drawable._4_of_spades
-            Pair (1,3) -> R.drawable._5_of_spades
-            Pair (1,4) -> R.drawable._6_of_spades
-            Pair (1,5) -> R.drawable._7_of_spades
-            Pair (1,6) -> R.drawable._8_of_spades
-            Pair (1,7) -> R.drawable._9_of_spades
-            Pair (1,8) -> R.drawable._10_of_spades
-            Pair (1,9) -> R.drawable.jack_of_spades2
-            Pair (1,10) -> R.drawable.queen_of_spades2
-            Pair (1,11) -> R.drawable.king_of_spades2
-            Pair (1,12) -> R.drawable.ace_of_spades2
+            Triple(1, 0, true) -> R.drawable._2_of_spades
+            Triple(1, 1, true) -> R.drawable._3_of_spades
+            Triple(1, 2, true) -> R.drawable._4_of_spades
+            Triple(1, 3, true) -> R.drawable._5_of_spades
+            Triple(1, 4, true) -> R.drawable._6_of_spades
+            Triple(1, 5, true) -> R.drawable._7_of_spades
+            Triple(1, 6, true) -> R.drawable._8_of_spades
+            Triple(1, 7, true) -> R.drawable._9_of_spades
+            Triple(1, 8, true) -> R.drawable._10_of_spades
+            Triple(1, 9, true) -> R.drawable.jack_of_spades2
+            Triple(1, 10, true) -> R.drawable.queen_of_spades2
+            Triple(1, 11, true) -> R.drawable.king_of_spades2
+            Triple(1, 12, true) -> R.drawable.ace_of_spades2
 
-            Pair(2, 0) -> R.drawable._2_of_diamonds
-            Pair(2, 1) -> R.drawable._3_of_diamonds
-            Pair (2,2) -> R.drawable._4_of_diamonds
-            Pair (2,3) -> R.drawable._5_of_diamonds
-            Pair (2,4) -> R.drawable._6_of_diamonds
-            Pair (2,5) -> R.drawable._7_of_diamonds
-            Pair (2,6) -> R.drawable._8_of_diamonds
-            Pair (2,7) -> R.drawable._9_of_diamonds
-            Pair (2,8) -> R.drawable._10_of_diamonds
-            Pair (2,9) -> R.drawable.jack_of_diamonds2
-            Pair (2,10) -> R.drawable.queen_of_diamonds2
-            Pair (2,11) -> R.drawable.king_of_diamonds2
-            Pair (2,12) -> R.drawable.ace_of_diamonds
+            Triple(2, 0, true) -> R.drawable._2_of_diamonds
+            Triple(2, 1, true) -> R.drawable._3_of_diamonds
+            Triple(2, 2, true) -> R.drawable._4_of_diamonds
+            Triple(2, 3, true) -> R.drawable._5_of_diamonds
+            Triple(2, 4, true) -> R.drawable._6_of_diamonds
+            Triple(2, 5, true) -> R.drawable._7_of_diamonds
+            Triple(2, 6, true) -> R.drawable._8_of_diamonds
+            Triple(2, 7, true) -> R.drawable._9_of_diamonds
+            Triple(2, 8, true) -> R.drawable._10_of_diamonds
+            Triple(2, 9, true) -> R.drawable.jack_of_diamonds2
+            Triple(2, 10, true) -> R.drawable.queen_of_diamonds2
+            Triple(2, 11, true) -> R.drawable.king_of_diamonds2
+            Triple(2, 12, true) -> R.drawable.ace_of_diamonds
 
-            Pair(3, 0) -> R.drawable._2_of_hearts
-            Pair(3, 1) -> R.drawable._3_of_hearts
-            Pair (3,2) ->R.drawable._4_of_hearts
-            Pair (3,3) ->R.drawable._5_of_hearts
-            Pair (3,4) ->R.drawable._6_of_hearts
-            Pair (3,5) ->R.drawable._7_of_hearts
-            Pair (3,6) ->R.drawable._8_of_hearts
-            Pair (3,7) ->R.drawable._9_of_hearts
-            Pair (3,8) ->R.drawable._10_of_hearts
-            Pair (3,9) ->R.drawable.jack_of_hearts2
-            Pair (3,10) -> R.drawable.queen_of_hearts2
-            Pair (3,11) -> R.drawable.king_of_hearts2
-            Pair (3,12) -> R.drawable.ace_of_hearts
-            Pair (20,20) -> R.drawable.screenshot_2023_11_21_at_15_57_36
+            Triple(3, 0, true) -> R.drawable._2_of_hearts
+            Triple(3, 1, true) -> R.drawable._3_of_hearts
+            Triple(3, 2, true) -> R.drawable._4_of_hearts
+            Triple(3, 3, true) -> R.drawable._5_of_hearts
+            Triple(3, 4, true) -> R.drawable._6_of_hearts
+            Triple(3, 5, true) -> R.drawable._7_of_hearts
+            Triple(3, 6, true) -> R.drawable._8_of_hearts
+            Triple(3, 7, true) -> R.drawable._9_of_hearts
+            Triple(3, 8, true) -> R.drawable._10_of_hearts
+            Triple(3, 9, true) -> R.drawable.jack_of_hearts2
+            Triple(3, 10, true) -> R.drawable.queen_of_hearts2
+            Triple(3, 11, true) -> R.drawable.king_of_hearts2
+            Triple(3, 12, true) -> R.drawable.ace_of_hearts
+            Triple(20, 20, true) -> R.drawable.screenshot_2023_11_21_at_15_57_36
             else -> R.drawable.ic_launcher_foreground
         }
         playerCard.setImageResource(imageResourceId)
@@ -375,6 +431,7 @@ class PlayActivity : AppCompatActivity() {
             }
             playerValue = 0
             dealerValue = 0
+
             playerTakenCards.clear()
             dealerTakenCards.clear()
             dealButton.visibility = View.VISIBLE
