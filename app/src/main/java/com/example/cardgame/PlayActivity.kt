@@ -9,15 +9,16 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import kotlin.math.round
 
 class PlayActivity : AppCompatActivity() {
 
     lateinit var textViewPlayer : TextView
     lateinit var textViewDealer : TextView
     lateinit var textViewWinLose : TextView
+    lateinit var balanceTextView: TextView
 
     lateinit var playerCard1 : ImageView
     lateinit var playerCard2 : ImageView
@@ -29,10 +30,33 @@ class PlayActivity : AppCompatActivity() {
     lateinit var dealerCard3 : ImageView
     lateinit var dealerCard4 : ImageView
     lateinit var dealerCard5 : ImageView
+    lateinit var betChip1 : ImageView
+    lateinit var betChip2 : ImageView
+    lateinit var betChip3 : ImageView
+    lateinit var betChip4 : ImageView
+    lateinit var betChip5 : ImageView
+    lateinit var betChip6 : ImageView
+    lateinit var betChip7 : ImageView
+    lateinit var betChip8 : ImageView
+    lateinit var betChip9 : ImageView
+    lateinit var betChip10 : ImageView
+    lateinit var betChip11 : ImageView
+    lateinit var betChip12 : ImageView
+    lateinit var betChip13 : ImageView
+    lateinit var betChip14 : ImageView
+    lateinit var betChip15 : ImageView
+    lateinit var betChip16 : ImageView
+    lateinit var betChip17 : ImageView
+    lateinit var betChip18 : ImageView
+    lateinit var betChip19 : ImageView
+    lateinit var betChip20 : ImageView
+
+
 
     var playerValue : Int = 0
     var dealerValue : Int = 0
     var nextCardIndex : Int = 0
+    var nextChipIndex : Int = 0
     var nextDealerCardIndex : Int = 0
     var gameOver : Boolean = false
     var winner : Boolean = false
@@ -41,6 +65,12 @@ class PlayActivity : AppCompatActivity() {
     var dealerWins = 0
     var draws = 0
     var roundsPlayed = 0
+    var playerPot : Int = 0
+
+    var chips = mutableListOf<Player>(
+        Player("Alvin",3000)
+    )
+
 
     val playerTakenCards = mutableListOf<Triple<Int, Int,Boolean>>()
     val dealerTakenCards = mutableListOf<Triple<Int, Int,Boolean>>()
@@ -49,12 +79,14 @@ class PlayActivity : AppCompatActivity() {
 
     lateinit var playerCards: List<ImageView>
     lateinit var dealerCards: List<ImageView>
+    lateinit var playerChips: List<ImageView>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
         textViewPlayer = findViewById(R.id.textViewPlayer)
         textViewDealer = findViewById(R.id.textViewDealer)
         textViewWinLose = findViewById(R.id.winLoseText)
+        balanceTextView = findViewById(R.id.balanceTextView)
         playerCard1 = findViewById(R.id.playerCard1)
         playerCard2 = findViewById(R.id.playerCard2)
         playerCard3 = findViewById(R.id.playerCard3)
@@ -65,19 +97,53 @@ class PlayActivity : AppCompatActivity() {
         dealerCard3 = findViewById(R.id.dealerCard3)
         dealerCard4 = findViewById(R.id.dealerCard4)
         dealerCard5 = findViewById(R.id.dealerCard5)
+        betChip1 = findViewById(R.id.betChip1)
+        betChip2 = findViewById(R.id.betChip2)
+        betChip3 = findViewById(R.id.betChip3)
+        betChip4 = findViewById(R.id.betChip4)
+        betChip5 = findViewById(R.id.betChip5)
+        betChip6 = findViewById(R.id.betChip6)
+        betChip7 = findViewById(R.id.betChip7)
+        betChip8 = findViewById(R.id.betChip8)
+        betChip9 = findViewById(R.id.betChip9)
+        betChip10 = findViewById(R.id.betChip10)
+        betChip11 = findViewById(R.id.betChip11)
+        betChip12 = findViewById(R.id.betChip12)
+        betChip13 = findViewById(R.id.betChip13)
+        betChip14 = findViewById(R.id.betChip14)
+        betChip15 = findViewById(R.id.betChip15)
+        betChip16 = findViewById(R.id.betChip16)
+        betChip17 = findViewById(R.id.betChip17)
+        betChip18 = findViewById(R.id.betChip18)
+        betChip19 = findViewById(R.id.betChip19)
+        betChip20 = findViewById(R.id.betChip20)
+
         val hitButton = findViewById<Button>(R.id.hitButton)
         val standButton = findViewById<Button>(R.id.standButton)
         val homeButton = findViewById<Button>(R.id.homeButton2)
         val dealButton = findViewById<Button>(R.id.dealButton)
+        val bet20Button = findViewById<ImageButton>(R.id.chip20Button)
+        val bet50Button = findViewById<ImageButton>(R.id.chip50Button)
+        val bet100Button = findViewById<ImageButton>(R.id.chip100Button)
+
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
         dealerCards = listOf(dealerCard1,dealerCard2,dealerCard3,dealerCard4,dealerCard5)
-        //val takenCards = mutableListOf<Pair<Int, Int>>()
+        playerChips = listOf(betChip1,betChip2,betChip3,betChip4,betChip5,betChip6,betChip7,betChip8
+        ,betChip9,betChip10,betChip11,betChip12,betChip13,betChip14,betChip15,betChip16,betChip17,betChip18,betChip19,betChip20)
+
         val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
         playerWins = sharedPref.getInt("playerWins", 0)
         dealerWins = sharedPref.getInt("dealerWins", 0)
         draws = sharedPref.getInt("draws", 0)
         roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
+         chips[0].balance = sharedPref.getInt("playerBalance", 0)
+
+        betChips(chips[0])
+        playerBalanceTextView()
         dealButton.setOnClickListener {
+            bet20Button.setEnabled(false)
+            bet50Button.setEnabled(false)
+            bet100Button.setEnabled(false)
             playBlackJack()
             dealButton.visibility = View.GONE
             hitButton.setEnabled(false)
@@ -98,6 +164,7 @@ class PlayActivity : AppCompatActivity() {
             putInt("dealerWins",dealerWins)
             putInt("draws",draws)
             putInt("roundsPlayed",roundsPlayed)
+            putInt("playerBalance",chips[0].balance)
             apply()
         }
     }
@@ -117,6 +184,7 @@ class PlayActivity : AppCompatActivity() {
     fun checkBlackJack() {
         if (playerValue == 21 && dealerValue  > 21){
             playerWins++
+            winBet(playerPot, chips[0] )
             gameOver = true
             winner = true
             resetGame()
@@ -127,6 +195,7 @@ class PlayActivity : AppCompatActivity() {
             resetGame()
         }
     }
+
     fun checkClosestTO21() {
         val playerDif = Math.abs(21 - playerValue)
         val dealerDif = Math.abs(21 - dealerValue)
@@ -134,6 +203,7 @@ class PlayActivity : AppCompatActivity() {
             when {
                 playerDif < dealerDif -> {
                     playerWins++
+                    winBet(playerPot, chips[0] )
                     gameOver = true
                     winner = true
                     resetGame()
@@ -151,6 +221,7 @@ class PlayActivity : AppCompatActivity() {
         if (dealerValue > 21 && playerValue < 21) {
             gameOver = true
             winner = true
+            winBet(playerPot, chips[0] )
             playerWins++
             resetGame()
         }  else {
@@ -398,6 +469,57 @@ class PlayActivity : AppCompatActivity() {
         }
         playerCard.setImageResource(imageResourceId)
     }
+    fun showChips(chip : ImageView,value: Int){
+        val drawableId = when (value) {
+            0 -> R.drawable.green20
+            1 -> R.drawable.red50
+            2 -> R.drawable.black100
+
+            else -> R.drawable.ic_launcher_foreground
+        }
+        chip.setImageResource(drawableId)
+    }
+
+    fun betChips(player: Player) {
+        val bet20Button = findViewById<ImageButton>(R.id.chip20Button)
+        val bet50Button = findViewById<ImageButton>(R.id.chip50Button)
+        val bet100Button = findViewById<ImageButton>(R.id.chip100Button)
+
+        bet20Button.setOnClickListener {
+            player.balance -= 20
+            playerPot += 20
+            playerBalanceTextView()
+            if (nextChipIndex < playerChips.size) {
+                showChips(playerChips[nextChipIndex], 0)
+                nextChipIndex++
+            }
+
+        }
+        bet50Button.setOnClickListener {
+            player.balance -= 50
+            playerPot += 50
+            playerBalanceTextView()
+            if (nextChipIndex < playerChips.size) {
+                showChips(playerChips[nextChipIndex], 1)
+                nextChipIndex++
+            }
+        }
+        bet100Button.setOnClickListener {
+            player.balance -= 100
+            playerPot += 100
+            playerBalanceTextView()
+            if (nextChipIndex < playerChips.size) {
+                showChips(playerChips[nextChipIndex], 2)
+                nextChipIndex++
+            }
+        }
+    }
+
+    fun winBet(bet : Int,player: Player) {
+        var win = bet * 2
+        player.balance += win
+
+    }
 
     fun winLoseText() {
         if (draw){
@@ -411,8 +533,16 @@ class PlayActivity : AppCompatActivity() {
         }
     }
 
+    fun playerBalanceTextView() {
+        balanceTextView.text = "${chips[0].balance}"
+
+    }
+
 
     fun resetGame() {
+        val bet20Button = findViewById<ImageButton>(R.id.chip20Button)
+        val bet50Button = findViewById<ImageButton>(R.id.chip50Button)
+        val bet100Button = findViewById<ImageButton>(R.id.chip100Button)
 
         Handler(Looper.getMainLooper()).postDelayed({
             val dealButton = findViewById<Button>(R.id.dealButton)
@@ -420,6 +550,7 @@ class PlayActivity : AppCompatActivity() {
             textViewWinLose.visibility = View.VISIBLE
             nextDealerCardIndex = 0
             nextCardIndex = 0
+            nextChipIndex = 0
             roundsPlayed++
             onStop()
             Log.d("resetGame", "resetGame called")
@@ -429,11 +560,20 @@ class PlayActivity : AppCompatActivity() {
             for (imageView in dealerCards) {
                 imageView.setImageResource(0)
             }
+            for (imageView in playerChips) {
+                imageView.setImageResource(0)
+            }
             playerValue = 0
             dealerValue = 0
+            playerPot = 0
+            bet20Button.setEnabled(true)  // Inaktivera chip-knapparna
+            bet50Button.setEnabled(true)
+            bet100Button.setEnabled(true)
+            Log.d("!!!", "${chips[0].balance} ")
 
             playerTakenCards.clear()
             dealerTakenCards.clear()
+            playerBalanceTextView()
             dealButton.visibility = View.VISIBLE
         }, 2000)
     }

@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         val dealerWins = sharedPref.getInt("dealerWins", 0)
         val draws = sharedPref.getInt("draws", 0)
         val roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
+        val playerBalance = sharedPref.getInt("playerBalance", 0)
+        //playerBalance = 3000
 
 
 
@@ -41,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("dealerWins", dealerWins)
             intent.putExtra("draws", draws)
             intent.putExtra("roundsPlayed", roundsPlayed)
+            intent.putExtra("playerBalance",playerBalance)
             startActivity(intent)
         }
     }
