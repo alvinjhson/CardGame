@@ -8,8 +8,22 @@
     tools:context=".StatisticActivity2">
 
     <TextView
+        android:id="@+id/playerBalanceView"
+        android:layout_width="200dp"
+        android:layout_height="46dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.205"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.357" />
+
+    <TextView
         android:id="@+id/drawView"
-        android:layout_width="168dp"
+        android:layout_width="200dp"
         android:layout_height="46dp"
         android:text="TextView"
         android:textColor="@color/white"
@@ -23,7 +37,7 @@
 
     <TextView
         android:id="@+id/roundsPlayedView"
-        android:layout_width="168dp"
+        android:layout_width="200dp"
         android:layout_height="46dp"
         android:text="TextView"
         android:textColor="@color/white"
@@ -37,7 +51,7 @@
 
     <TextView
         android:id="@+id/dealerWinView"
-        android:layout_width="168dp"
+        android:layout_width="200dp"
         android:layout_height="46dp"
         android:text="TextView"
         android:textColor="@color/white"
@@ -51,7 +65,7 @@
 
     <TextView
         android:id="@+id/playerWinsView"
-        android:layout_width="168dp"
+        android:layout_width="200dp"
         android:layout_height="46dp"
         android:text="TextView"
         android:textColor="@color/white"

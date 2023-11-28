@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import org.w3c.dom.Text
 
 class StatisticActivity2 : AppCompatActivity() {
     lateinit var playerWinsView : TextView
     lateinit var dealerWinsView : TextView
     lateinit var roundsPlayedWins : TextView
     lateinit var drawsView : TextView
+    lateinit var playerBalanceView : TextView
     val playClass = PlayActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,16 +22,19 @@ class StatisticActivity2 : AppCompatActivity() {
         dealerWinsView = findViewById(R.id.dealerWinView)
         roundsPlayedWins = findViewById(R.id.roundsPlayedView)
         drawsView = findViewById(R.id.drawView)
+        playerBalanceView = findViewById(R.id.playerBalanceView)
         val homeButton = findViewById<Button>(R.id.homeButton)
         val playerWins = intent.getIntExtra("playerWins", 0)
         val dealerWins = intent.getIntExtra("dealerWins", 0)
         val draws = intent.getIntExtra("draws", 0)
         val roundsPlayed = intent.getIntExtra("roundsPlayed", 0)
+        val playerBalance = intent.getIntExtra("playerBalance",0)
 
             showPlayerWins(playerWins)
             showdealerWins(dealerWins)
             showDraws(draws)
             showRoundsPlayed(roundsPlayed)
+            showPlayerBalance(playerBalance)
 
             homeButton.setOnClickListener {
                 val intent = Intent(this, MainActivity::class.java)
@@ -53,6 +58,11 @@ class StatisticActivity2 : AppCompatActivity() {
     fun showRoundsPlayed(roundsPlayed: Int) {
         val roundsPlayed = roundsPlayed.toString()
         roundsPlayedWins.text = "Rounds Played $roundsPlayed"
+    }
+
+    fun showPlayerBalance(playerBalance: Int) {
+        val playerBalance = playerBalance.toString()
+        playerBalanceView.text = "Balance $playerBalance"
     }
 
 
