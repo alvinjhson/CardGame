@@ -9,11 +9,6 @@ import android.widget.Button
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-    //val card = DeckOfCards()
-    val playClass = PlayActivity()
-
-    //val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-    //val playerWins = sharedPref.getInt("playerWins", 0) // 0 är ett standardvärde
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,17 +21,12 @@ class MainActivity : AppCompatActivity() {
         val draws = sharedPref.getInt("draws", 0)
         val roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
         val playerBalance = sharedPref.getInt("playerBalance", 0)
-        //playerBalance = 3000
-
-
-
+        val totalChipsWon = sharedPref.getInt("totalChipsWon", 0)
 
         playButton.setOnClickListener{
-
             val intent = Intent(this,PlayActivity::class.java)
             startActivity(intent)
         }
-
         statsButton.setOnClickListener{
             val intent = Intent (this,StatisticActivity2::class.java)
             intent.putExtra("playerWins", playerWins)
@@ -44,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("draws", draws)
             intent.putExtra("roundsPlayed", roundsPlayed)
             intent.putExtra("playerBalance",playerBalance)
+            intent.putExtra("totalChipsWon",totalChipsWon)
             startActivity(intent)
         }
     }
