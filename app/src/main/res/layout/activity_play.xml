@@ -7,6 +7,20 @@
     android:background="#31473A"
     tools:context=".PlayActivity">
 
+    <Button
+        android:id="@+id/doubleButton"
+        android:layout_width="109dp"
+        android:layout_height="62dp"
+        android:backgroundTint="#636E83"
+        android:text="Double"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.947"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.612" />
+
     <ImageView
         android:id="@+id/betChip11"
         android:layout_width="46dp"
