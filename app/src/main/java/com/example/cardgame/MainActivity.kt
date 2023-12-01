@@ -4,8 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +23,18 @@ class MainActivity : AppCompatActivity() {
         val roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
         val playerBalance = sharedPref.getInt("playerBalance", 0)
         val totalChipsWon = sharedPref.getInt("totalChipsWon", 0)
+
+        val img = AnimationUtils.loadAnimation(this,R.anim.img)
+        val blackJackImg = findViewById(R.id.blackJackImageView) as ImageView
+        blackJackImg.startAnimation(img)
+
+        val btplay = AnimationUtils.loadAnimation(this,R.anim.btplay)
+        val btstat = AnimationUtils.loadAnimation(this,R.anim.btstat)
+        playButton.startAnimation(btplay)
+        statsButton.startAnimation(btstat)
+
+
+
 
         playButton.setOnClickListener{
             val intent = Intent(this,PlayActivity::class.java)

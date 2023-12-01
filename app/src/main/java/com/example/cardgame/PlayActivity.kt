@@ -1,17 +1,24 @@
 package com.example.cardgame
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.graphics.Path
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
+
 
 class PlayActivity : AppCompatActivity() {
 
@@ -136,6 +143,24 @@ class PlayActivity : AppCompatActivity() {
         val bet100Button = findViewById<ImageButton>(R.id.chip100Button)
         val doubleButton = findViewById<Button>(R.id.doubleButton)
 
+
+        val btHit = AnimationUtils.loadAnimation(this,R.anim.bthit)
+        val btStand = AnimationUtils.loadAnimation(this,R.anim.btstand)
+        val btDeal = AnimationUtils.loadAnimation(this,R.anim.btdeal)
+        val img20 = AnimationUtils.loadAnimation(this,R.anim.img20)
+        val img50 = AnimationUtils.loadAnimation(this,R.anim.img50)
+        val img100 = AnimationUtils.loadAnimation(this,R.anim.img100)
+        val txtBalance = AnimationUtils.loadAnimation(this,R.anim.txtbalance)
+
+        hitButton.startAnimation(btHit)
+        dealButton.startAnimation(btDeal)
+        standButton.startAnimation(btStand)
+        bet20Button.startAnimation(img20)
+        bet50Button.startAnimation(img50)
+        bet100Button.startAnimation(img100)
+        balanceTextView.startAnimation(txtBalance)
+
+
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
         dealerCards = listOf(dealerCard1,dealerCard2,dealerCard3,dealerCard4,dealerCard5)
         playerChips = listOf(betChip1,betChip2,betChip3,betChip4,betChip5,betChip6,betChip7,betChip8
@@ -148,6 +173,8 @@ class PlayActivity : AppCompatActivity() {
         roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
          chips[0].balance = sharedPref.getInt("playerBalance", 0)
         totalChipsWon = sharedPref.getInt("totalChipsWon", 0)
+
+
 
         betChips(chips[0])
         playerBalanceTextView()
@@ -271,7 +298,27 @@ class PlayActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(playerCards[nextCardIndex])
             nextCardIndex++
-        }, 500)
+
+
+            playerCard1.animate().apply {
+                duration = 1000
+                rotationXBy(360f)
+                translationYBy(200f)
+            }
+
+
+            // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                //val path = Path().apply {
+                    //arcTo(0f, 0f, 100f, 1390f, 270f, -180f, true)
+                //}
+                //val animator = ObjectAnimator.ofFloat(playerCard1, View.X, View.Y, path).apply {
+                   // duration = 460
+                   // start()
+              //  }
+            //} else {
+                //Create animator without using curved path
+          // }
+       }, 500)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(dealerCards[nextDealerCardIndex])
             nextDealerCardIndex++
@@ -337,6 +384,7 @@ class PlayActivity : AppCompatActivity() {
         } else {
             calculateDealerCardValue(value)
         }
+
     }
     fun adjust1AceValue() {
         if (playerValue > 21) {
@@ -497,8 +545,14 @@ class PlayActivity : AppCompatActivity() {
             Triple(20, 20, true) -> R.drawable.screenshot_2023_11_21_at_15_57_36
             else -> R.drawable.ic_launcher_foreground
         }
+
+
+
+
         playerCard.setImageResource(imageResourceId)
+
     }
+
     fun showChips(chip : ImageView,value: Int){
         val drawableId = when (value) {
             0 -> R.drawable.green20
