@@ -296,6 +296,7 @@ class PlayActivity : AppCompatActivity() {
             gameOver = true
             draws++
             draw = true
+            chips[0].balance += playerPot
             resetGame()
         }
     }
