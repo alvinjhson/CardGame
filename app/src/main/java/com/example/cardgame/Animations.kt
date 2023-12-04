@@ -7,7 +7,7 @@ import android.widget.ImageView
 class Animations {
 
 
-    fun dealerCardAnimation(view: ImageView) {
+    fun cardAnimation(view: ImageView) {
         val leftAnimation = ObjectAnimator.ofFloat(view, "translationX", -500f).apply {
             duration = 250
         }
@@ -20,7 +20,7 @@ class Animations {
             start()
         }
     }
-
+    /*
     fun playerCardAnimation(view: ImageView) {
         val leftAnimation = ObjectAnimator.ofFloat(view, "translationX", -500f).apply {
             duration = 250
@@ -34,6 +34,8 @@ class Animations {
             start()
         }
     }
+    */
+
 
 
 }
