@@ -1,5 +1,8 @@
 package com.example.cardgame
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
@@ -16,7 +19,10 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.graphics.Path
+import android.util.DisplayMetrics
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.TranslateAnimation
 
 
@@ -57,6 +63,8 @@ class PlayActivity : AppCompatActivity() {
     lateinit var betChip18 : ImageView
     lateinit var betChip19 : ImageView
     lateinit var betChip20 : ImageView
+
+
 
 
 
@@ -291,44 +299,64 @@ class PlayActivity : AppCompatActivity() {
             resetGame()
         }
     }
+    fun dealerCardAnimation(view: ImageView) {
+
+        val leftAnimation = ObjectAnimator.ofFloat(view, "translationX", -500f).apply {
+            duration = 250
+        }
+        val rightAnimation = ObjectAnimator.ofFloat(view, "translationX", 50f).apply{
+            duration = 250
+        }
+
+        AnimatorSet().apply {
+            play(leftAnimation).with(rightAnimation)
+            play(rightAnimation).with(leftAnimation)
+            start()
+        }
+    }
+
+    fun playerCardAnimation(view: ImageView) {
+
+        val leftAnimation = ObjectAnimator.ofFloat(view, "translationX", -500f).apply {
+            duration = 250
+        }
+        val rightAnimation = ObjectAnimator.ofFloat(view, "translationX", 50f).apply{
+            duration = 250
+        }
+
+        AnimatorSet().apply {
+            play(leftAnimation).with(rightAnimation)
+            play(rightAnimation).with(leftAnimation)
+            start()
+        }
+    }
     fun firstCards(){
         val hitButton = findViewById<Button>(R.id.hitButton)
         val standButton = findViewById<Button>(R.id.standButton)
         val doubleButton = findViewById<Button>(R.id.doubleButton)
+
+
+
+
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(playerCards[nextCardIndex])
+            playerCardAnimation(playerCards[nextCardIndex])
             nextCardIndex++
 
-
-            playerCard1.animate().apply {
-                duration = 1000
-                rotationXBy(360f)
-                translationYBy(200f)
-            }
-
-
-            // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                //val path = Path().apply {
-                    //arcTo(0f, 0f, 100f, 1390f, 270f, -180f, true)
-                //}
-                //val animator = ObjectAnimator.ofFloat(playerCard1, View.X, View.Y, path).apply {
-                   // duration = 460
-                   // start()
-              //  }
-            //} else {
-                //Create animator without using curved path
-          // }
        }, 500)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(dealerCards[nextDealerCardIndex])
+            dealerCardAnimation(dealerCards[nextDealerCardIndex])
             nextDealerCardIndex++
         }, 1000)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(playerCards[nextCardIndex])
+            playerCardAnimation(playerCards[nextCardIndex])
             nextCardIndex++
         }, 1500)
         Handler(Looper.getMainLooper()).postDelayed({
             setCardImage(dealerCard2, Triple(20, 20,true))
+            dealerCardAnimation(dealerCards[nextDealerCardIndex])
             hitButton.setEnabled(true)
             standButton.setEnabled(true)
             doubleButton.setEnabled(true)
@@ -338,12 +366,18 @@ class PlayActivity : AppCompatActivity() {
     fun giveOutDealerCard() {
         if (playerValue > 21) {
             dealCard(dealerCards[nextDealerCardIndex])
+            if (nextDealerCardIndex > 1) {
+                dealerCardAnimation(dealerCards[nextDealerCardIndex])
+            }
             nextDealerCardIndex++
             over21()
            checkBlackJack()
         }
         else if (dealerValue < 16 && nextDealerCardIndex < dealerCards.size) {
             dealCard(dealerCards[nextDealerCardIndex])
+            if (nextDealerCardIndex > 1) {
+                dealerCardAnimation(dealerCards[nextDealerCardIndex])
+            }
             nextDealerCardIndex++
             over21()
             Handler(Looper.getMainLooper()).postDelayed({
@@ -359,6 +393,7 @@ class PlayActivity : AppCompatActivity() {
         if (playerValue < 21) {
             if (nextCardIndex < playerCards.size) {
                 dealCard(playerCards[nextCardIndex])
+                playerCardAnimation(playerCards[nextCardIndex])
                 nextCardIndex++
             }
         }
