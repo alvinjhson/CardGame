@@ -66,18 +66,12 @@ class PlayActivity : AppCompatActivity() {
     lateinit var betChip19 : ImageView
     lateinit var betChip20 : ImageView
 
-
-
-
-
     var playerValue : Int = 0
     var dealerValue : Int = 0
     var nextCardIndex : Int = 0
     var nextChipIndex : Int = 0
     var nextDealerCardIndex : Int = 0
     var totalChipsShown : Int = 0
-
-
 
     var gameOver : Boolean = false
     var winner : Boolean = false
@@ -89,7 +83,6 @@ class PlayActivity : AppCompatActivity() {
     var roundsPlayed = 0
     var playerPot : Int = 0
 
-
     var chips = mutableListOf<Player>(
         Player("Alvin",3000)
     )
@@ -97,11 +90,8 @@ class PlayActivity : AppCompatActivity() {
     val betChipsTypes = mutableListOf<Int>()
 
 
-
     val playerTakenCards = mutableListOf<Triple<Int, Int,Boolean>>()
     val dealerTakenCards = mutableListOf<Triple<Int, Int,Boolean>>()
-
-
 
     lateinit var playerCards: List<ImageView>
     lateinit var dealerCards: List<ImageView>
@@ -308,24 +298,22 @@ class PlayActivity : AppCompatActivity() {
         val doubleButton = findViewById<Button>(R.id.doubleButton)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(playerCards[nextCardIndex])
-            animations.playerCardAnimation(playerCards[nextCardIndex])
-
+            animations.cardAnimation(playerCards[nextCardIndex])
             nextCardIndex++
-
        }, 500)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(dealerCards[nextDealerCardIndex])
-            animations.dealerCardAnimation(dealerCards[nextDealerCardIndex])
+            animations.cardAnimation(dealerCards[nextDealerCardIndex])
             nextDealerCardIndex++
         }, 1000)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(playerCards[nextCardIndex])
-            animations.playerCardAnimation(playerCards[nextCardIndex])
+            animations.cardAnimation(playerCards[nextCardIndex])
             nextCardIndex++
         }, 1500)
         Handler(Looper.getMainLooper()).postDelayed({
             setCardImage(dealerCard2, Triple(20, 20,true))
-            animations.dealerCardAnimation(dealerCards[nextDealerCardIndex])
+            animations.cardAnimation(dealerCards[nextDealerCardIndex])
             hitButton.setEnabled(true)
             standButton.setEnabled(true)
             doubleButton.setEnabled(true)
@@ -336,7 +324,7 @@ class PlayActivity : AppCompatActivity() {
         if (playerValue > 21) {
             dealCard(dealerCards[nextDealerCardIndex])
             if (nextDealerCardIndex > 1) {
-                animations.dealerCardAnimation(dealerCards[nextDealerCardIndex])
+                animations.cardAnimation(dealerCards[nextDealerCardIndex])
             }
             nextDealerCardIndex++
             over21()
@@ -345,7 +333,7 @@ class PlayActivity : AppCompatActivity() {
         else if (dealerValue < 16 && nextDealerCardIndex < dealerCards.size) {
             dealCard(dealerCards[nextDealerCardIndex])
             if (nextDealerCardIndex > 1) {
-                animations.dealerCardAnimation(dealerCards[nextDealerCardIndex])
+                animations.cardAnimation(dealerCards[nextDealerCardIndex])
             }
             nextDealerCardIndex++
             over21()
@@ -362,7 +350,7 @@ class PlayActivity : AppCompatActivity() {
         if (playerValue < 21) {
             if (nextCardIndex < playerCards.size) {
                 dealCard(playerCards[nextCardIndex])
-                animations.playerCardAnimation(playerCards[nextCardIndex])
+                animations.cardAnimation(playerCards[nextCardIndex])
                 nextCardIndex++
             }
         }
