@@ -1,17 +1,30 @@
 package com.example.cardgame
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.graphics.Path
+import android.util.DisplayMetrics
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.TranslateAnimation
+
 
 class PlayActivity : AppCompatActivity() {
 
@@ -50,6 +63,8 @@ class PlayActivity : AppCompatActivity() {
     lateinit var betChip18 : ImageView
     lateinit var betChip19 : ImageView
     lateinit var betChip20 : ImageView
+
+
 
 
 
@@ -136,6 +151,24 @@ class PlayActivity : AppCompatActivity() {
         val bet100Button = findViewById<ImageButton>(R.id.chip100Button)
         val doubleButton = findViewById<Button>(R.id.doubleButton)
 
+
+        val btHit = AnimationUtils.loadAnimation(this,R.anim.bthit)
+        val btStand = AnimationUtils.loadAnimation(this,R.anim.btstand)
+        val btDeal = AnimationUtils.loadAnimation(this,R.anim.btdeal)
+        val img20 = AnimationUtils.loadAnimation(this,R.anim.img20)
+        val img50 = AnimationUtils.loadAnimation(this,R.anim.img50)
+        val img100 = AnimationUtils.loadAnimation(this,R.anim.img100)
+        val txtBalance = AnimationUtils.loadAnimation(this,R.anim.txtbalance)
+
+        hitButton.startAnimation(btHit)
+        dealButton.startAnimation(btDeal)
+        standButton.startAnimation(btStand)
+        bet20Button.startAnimation(img20)
+        bet50Button.startAnimation(img50)
+        bet100Button.startAnimation(img100)
+        balanceTextView.startAnimation(txtBalance)
+
+
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
         dealerCards = listOf(dealerCard1,dealerCard2,dealerCard3,dealerCard4,dealerCard5)
         playerChips = listOf(betChip1,betChip2,betChip3,betChip4,betChip5,betChip6,betChip7,betChip8
@@ -148,6 +181,8 @@ class PlayActivity : AppCompatActivity() {
         roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
          chips[0].balance = sharedPref.getInt("playerBalance", 0)
         totalChipsWon = sharedPref.getInt("totalChipsWon", 0)
+
+
 
         betChips(chips[0])
         playerBalanceTextView()
@@ -264,24 +299,64 @@ class PlayActivity : AppCompatActivity() {
             resetGame()
         }
     }
+    fun dealerCardAnimation(view: ImageView) {
+
+        val leftAnimation = ObjectAnimator.ofFloat(view, "translationX", -500f).apply {
+            duration = 250
+        }
+        val rightAnimation = ObjectAnimator.ofFloat(view, "translationX", 50f).apply{
+            duration = 250
+        }
+
+        AnimatorSet().apply {
+            play(leftAnimation).with(rightAnimation)
+            play(rightAnimation).with(leftAnimation)
+            start()
+        }
+    }
+
+    fun playerCardAnimation(view: ImageView) {
+
+        val leftAnimation = ObjectAnimator.ofFloat(view, "translationX", -500f).apply {
+            duration = 250
+        }
+        val rightAnimation = ObjectAnimator.ofFloat(view, "translationX", 50f).apply{
+            duration = 250
+        }
+
+        AnimatorSet().apply {
+            play(leftAnimation).with(rightAnimation)
+            play(rightAnimation).with(leftAnimation)
+            start()
+        }
+    }
     fun firstCards(){
         val hitButton = findViewById<Button>(R.id.hitButton)
         val standButton = findViewById<Button>(R.id.standButton)
         val doubleButton = findViewById<Button>(R.id.doubleButton)
+
+
+
+
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(playerCards[nextCardIndex])
+            playerCardAnimation(playerCards[nextCardIndex])
             nextCardIndex++
-        }, 500)
+
+       }, 500)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(dealerCards[nextDealerCardIndex])
+            dealerCardAnimation(dealerCards[nextDealerCardIndex])
             nextDealerCardIndex++
         }, 1000)
         Handler(Looper.getMainLooper()).postDelayed({
             dealCard(playerCards[nextCardIndex])
+            playerCardAnimation(playerCards[nextCardIndex])
             nextCardIndex++
         }, 1500)
         Handler(Looper.getMainLooper()).postDelayed({
             setCardImage(dealerCard2, Triple(20, 20,true))
+            dealerCardAnimation(dealerCards[nextDealerCardIndex])
             hitButton.setEnabled(true)
             standButton.setEnabled(true)
             doubleButton.setEnabled(true)
@@ -291,12 +366,18 @@ class PlayActivity : AppCompatActivity() {
     fun giveOutDealerCard() {
         if (playerValue > 21) {
             dealCard(dealerCards[nextDealerCardIndex])
+            if (nextDealerCardIndex > 1) {
+                dealerCardAnimation(dealerCards[nextDealerCardIndex])
+            }
             nextDealerCardIndex++
             over21()
            checkBlackJack()
         }
         else if (dealerValue < 16 && nextDealerCardIndex < dealerCards.size) {
             dealCard(dealerCards[nextDealerCardIndex])
+            if (nextDealerCardIndex > 1) {
+                dealerCardAnimation(dealerCards[nextDealerCardIndex])
+            }
             nextDealerCardIndex++
             over21()
             Handler(Looper.getMainLooper()).postDelayed({
@@ -312,6 +393,7 @@ class PlayActivity : AppCompatActivity() {
         if (playerValue < 21) {
             if (nextCardIndex < playerCards.size) {
                 dealCard(playerCards[nextCardIndex])
+                playerCardAnimation(playerCards[nextCardIndex])
                 nextCardIndex++
             }
         }
@@ -337,6 +419,7 @@ class PlayActivity : AppCompatActivity() {
         } else {
             calculateDealerCardValue(value)
         }
+
     }
     fun adjust1AceValue() {
         if (playerValue > 21) {
@@ -497,8 +580,14 @@ class PlayActivity : AppCompatActivity() {
             Triple(20, 20, true) -> R.drawable.screenshot_2023_11_21_at_15_57_36
             else -> R.drawable.ic_launcher_foreground
         }
+
+
+
+
         playerCard.setImageResource(imageResourceId)
+
     }
+
     fun showChips(chip : ImageView,value: Int){
         val drawableId = when (value) {
             0 -> R.drawable.green20
