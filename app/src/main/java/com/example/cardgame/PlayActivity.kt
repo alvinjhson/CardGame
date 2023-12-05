@@ -35,6 +35,8 @@ class PlayActivity : AppCompatActivity() {
     lateinit var textViewWinLose : TextView
     lateinit var balanceTextView: TextView
 
+    lateinit var playerImage : ImageView
+    lateinit var lineImageView : ImageView
     lateinit var playerCard1 : ImageView
     lateinit var playerCard2 : ImageView
     lateinit var playerCard3 : ImageView
@@ -113,6 +115,7 @@ class PlayActivity : AppCompatActivity() {
         dealerCard3 = findViewById(R.id.dealerCard3)
         dealerCard4 = findViewById(R.id.dealerCard4)
         dealerCard5 = findViewById(R.id.dealerCard5)
+        playerImage = findViewById(R.id.playerImageView)
         betChip1 = findViewById(R.id.betChip1)
         betChip2 = findViewById(R.id.betChip2)
         betChip3 = findViewById(R.id.betChip3)
@@ -142,8 +145,10 @@ class PlayActivity : AppCompatActivity() {
         val bet50Button = findViewById<ImageButton>(R.id.chip50Button)
         val bet100Button = findViewById<ImageButton>(R.id.chip100Button)
         val doubleButton = findViewById<Button>(R.id.doubleButton)
+        val lineImage = findViewById<ImageView>(R.id.betweenImageView)
 
 
+        val imgLine = AnimationUtils.loadAnimation(this,R.anim.imgline)
         val btHit = AnimationUtils.loadAnimation(this,R.anim.bthit)
         val btStand = AnimationUtils.loadAnimation(this,R.anim.btstand)
         val btDeal = AnimationUtils.loadAnimation(this,R.anim.btdeal)
@@ -152,6 +157,8 @@ class PlayActivity : AppCompatActivity() {
         val img100 = AnimationUtils.loadAnimation(this,R.anim.img100)
         val txtBalance = AnimationUtils.loadAnimation(this,R.anim.txtbalance)
 
+
+
         hitButton.startAnimation(btHit)
         dealButton.startAnimation(btDeal)
         standButton.startAnimation(btStand)
@@ -159,6 +166,10 @@ class PlayActivity : AppCompatActivity() {
         bet50Button.startAnimation(img50)
         bet100Button.startAnimation(img100)
         balanceTextView.startAnimation(txtBalance)
+        lineImage.startAnimation(imgLine)
+        playerImage.startAnimation(imgLine)
+
+
 
 
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
@@ -627,12 +638,16 @@ class PlayActivity : AppCompatActivity() {
     }
 
     fun winLoseText() {
+        val txtBalance = AnimationUtils.loadAnimation(this,R.anim.txtbalance)
         if (draw){
+            textViewWinLose.startAnimation(txtBalance)
             textViewWinLose.text = "Draw"
         }
        else if (winner){
+            textViewWinLose.startAnimation(txtBalance)
             textViewWinLose.text = "You Win"
         } else{
+            textViewWinLose.startAnimation(txtBalance)
             textViewWinLose.text = "You Lose"
         }
     }
@@ -645,6 +660,7 @@ class PlayActivity : AppCompatActivity() {
         val bet50Button = findViewById<ImageButton>(R.id.chip50Button)
         val bet100Button = findViewById<ImageButton>(R.id.chip100Button)
         val doubleButton = findViewById<Button>(R.id.doubleButton)
+        val img20 = AnimationUtils.loadAnimation(this,R.anim.img20)
 
         Handler(Looper.getMainLooper()).postDelayed({
             val dealButton = findViewById<Button>(R.id.dealButton)
@@ -680,6 +696,7 @@ class PlayActivity : AppCompatActivity() {
             dealerTakenCards.clear()
             betChipsTypes.clear()
             playerBalanceTextView()
+            dealButton.startAnimation(img20)
             dealButton.visibility = View.VISIBLE
             doubleButton.visibility = View.GONE
         }, 2000)
