@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         val playButton = findViewById<Button>(R.id.playButton)
         val statsButton = findViewById<Button>(R.id.statsButton)
         val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-        val playerWins = sharedPref.getInt("playerWins", 0) // 0 är ett standardvärde
+        val playerWins = sharedPref.getInt("playerWins", 0)
         val dealerWins = sharedPref.getInt("dealerWins", 0)
         val draws = sharedPref.getInt("draws", 0)
         val roundsPlayed = sharedPref.getInt("roundsPlayed", 0)

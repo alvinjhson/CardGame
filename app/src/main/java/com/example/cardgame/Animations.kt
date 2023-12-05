@@ -20,22 +20,4 @@ class Animations {
             start()
         }
     }
-    /*
-    fun playerCardAnimation(view: ImageView) {
-        val leftAnimation = ObjectAnimator.ofFloat(view, "translationX", -500f).apply {
-            duration = 250
-        }
-        val rightAnimation = ObjectAnimator.ofFloat(view, "translationX", 50f).apply{
-            duration = 250
-        }
-        AnimatorSet().apply {
-            play(leftAnimation).with(rightAnimation)
-            play(rightAnimation).with(leftAnimation)
-            start()
-        }
-    }
-    */
-
-
-
 }

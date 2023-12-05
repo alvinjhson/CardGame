@@ -36,7 +36,6 @@ class PlayActivity : AppCompatActivity() {
     lateinit var balanceTextView: TextView
 
     lateinit var playerImage : ImageView
-    lateinit var lineImageView : ImageView
     lateinit var playerCard1 : ImageView
     lateinit var playerCard2 : ImageView
     lateinit var playerCard3 : ImageView
@@ -182,7 +181,7 @@ class PlayActivity : AppCompatActivity() {
         dealerWins = sharedPref.getInt("dealerWins", 0)
         draws = sharedPref.getInt("draws", 0)
         roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
-         chips[0].balance = sharedPref.getInt("playerBalance", 0)
+        chips[0].balance = sharedPref.getInt("playerBalance", 0)
         totalChipsWon = sharedPref.getInt("totalChipsWon", 0)
 
 
@@ -653,7 +652,7 @@ class PlayActivity : AppCompatActivity() {
     }
 
     fun playerBalanceTextView() {
-        balanceTextView.text = "${chips[0].balance}"
+        balanceTextView.text = "${chips[0].balance} $"
     }
     fun resetGame() {
         val bet20Button = findViewById<ImageButton>(R.id.chip20Button)
