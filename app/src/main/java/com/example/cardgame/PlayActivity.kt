@@ -83,6 +83,8 @@ class PlayActivity : AppCompatActivity() {
     var draws = 0
     var roundsPlayed = 0
     var playerPot : Int = 0
+    var checkWin : Boolean = false
+
 
     var chips = mutableListOf<Player>(
         Player("Alvin",3000)
@@ -242,54 +244,67 @@ class PlayActivity : AppCompatActivity() {
         }
     }
     fun checkBlackJack() {
-        if (playerValue == 21 ){
-            playerWins++
-            winBet(playerPot, chips[0] )
-            gameOver = true
-            winner = true
-            resetGame()
-        } else if (dealerValue == 21 ){
-            gameOver = true
-            dealerWins++
-            winner = false
-            resetGame()
+        if (checkWin == false) {
+            if (playerValue == 21) {
+                playerWins++
+                winBet(playerPot, chips[0])
+                gameOver = true
+                winner = true
+                checkWin = true
+                resetGame()
+            } else if (dealerValue == 21) {
+                gameOver = true
+                dealerWins++
+                winner = false
+                checkWin = true
+                resetGame()
+            }
         }
     }
 
     fun checkClosestTO21() {
         val playerDif = Math.abs(21 - playerValue)
         val dealerDif = Math.abs(21 - dealerValue)
-        if (dealerValue < 21 ||  playerValue < 21) {
-            when {
-                playerDif < dealerDif -> {
-                    playerWins++
-                    winBet(playerPot, chips[0] )
-                    gameOver = true
-                    winner = true
-                    resetGame()
-                }
-                dealerDif < playerDif -> {
-                    dealerWins++
-                    gameOver = true
-                    winner = false
-                    resetGame()
+        if (checkWin == false) {
+            if (dealerValue < 21 || playerValue < 21) {
+                when {
+                    playerDif < dealerDif -> {
+                        playerWins++
+                        winBet(playerPot, chips[0])
+                        gameOver = true
+                        winner = true
+                        checkWin = true
+                        resetGame()
+                    }
+
+                    dealerDif < playerDif -> {
+                        dealerWins++
+                        gameOver = true
+                        winner = false
+                        checkWin = true
+                        resetGame()
+                    }
                 }
             }
         }
     }
     fun over21() {
-        if (dealerValue > 21 && playerValue < 21) {
-            gameOver = true
-            winner = true
-            winBet(playerPot, chips[0] )
-            playerWins++
-            resetGame()
-        }  else {
-            if (playerValue > 21 && dealerValue < 21) {
+        if (checkWin == false) {
+            if (dealerValue > 21 && playerValue < 21) {
                 gameOver = true
-                winner = false
-                dealerWins++
+                winner = true
+                checkWin = true
+                winBet(playerPot, chips[0])
+                playerWins++
                 resetGame()
+            } else {
+                if (playerValue > 21 && dealerValue < 21) {
+                    gameOver = true
+                    winner = false
+                    checkWin = true
+                    dealerWins++
+                    resetGame()
+                }
             }
         }
     }
@@ -698,6 +713,7 @@ class PlayActivity : AppCompatActivity() {
             dealButton.startAnimation(img20)
             dealButton.visibility = View.VISIBLE
             doubleButton.visibility = View.GONE
+            checkWin = false
         }, 2000)
     }
 }
