@@ -17,10 +17,10 @@
         android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.922"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.031" />
+        app:layout_constraintVertical_bias="0.041" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -70,75 +70,75 @@
 
     <TextView
         android:id="@+id/playerWinsView"
-        android:layout_width="200dp"
-        android:layout_height="46dp"
+        android:layout_width="300dp"
+        android:layout_height="43dp"
         android:fontFamily="@font/inter_extralight"
         android:text="TextView"
         android:textColor="#827139"
-        android:textSize="20sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.146"
+        app:layout_constraintHorizontal_bias="0.243"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.534" />
 
     <TextView
         android:id="@+id/dealerWinView"
-        android:layout_width="200dp"
-        android:layout_height="46dp"
+        android:layout_width="300dp"
+        android:layout_height="43dp"
         android:fontFamily="@font/inter_extralight"
         android:text="TextView"
         android:textColor="#827139"
-        android:textSize="20sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.146"
+        app:layout_constraintHorizontal_bias="0.243"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.608" />
-
-    <TextView
-        android:id="@+id/totalChipsWonView"
-        android:layout_width="230dp"
-        android:layout_height="46dp"
-        android:fontFamily="@font/inter_extralight"
-        android:text="TextView"
-        android:textColor="#827139"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.146"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.893" />
+        app:layout_constraintVertical_bias="0.62" />
 
     <TextView
         android:id="@+id/drawView"
-        android:layout_width="200dp"
-        android:layout_height="46dp"
+        android:layout_width="300dp"
+        android:layout_height="43dp"
         android:fontFamily="@font/inter_extralight"
         android:text="TextView"
         android:textColor="#827139"
-        android:textSize="20sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.146"
+        app:layout_constraintHorizontal_bias="0.243"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.795" />
 
     <TextView
-        android:id="@+id/roundsPlayedView"
-        android:layout_width="200dp"
-        android:layout_height="46dp"
+        android:id="@+id/totalChipsWonView"
+        android:layout_width="300dp"
+        android:layout_height="43dp"
         android:fontFamily="@font/inter_extralight"
         android:text="TextView"
         android:textColor="#827139"
-        android:textSize="20sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.146"
+        app:layout_constraintHorizontal_bias="0.243"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.893" />
+
+    <TextView
+        android:id="@+id/roundsPlayedView"
+        android:layout_width="300dp"
+        android:layout_height="44dp"
+        android:fontFamily="@font/inter_extralight"
+        android:text="TextView"
+        android:textColor="#827139"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.243"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.706" />
