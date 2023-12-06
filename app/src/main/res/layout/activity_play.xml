@@ -7,6 +7,20 @@
     android:background="#31473A"
     tools:context=".PlayActivity">
 
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="156dp"
+        android:layout_height="31dp"
+        android:fontFamily="@font/inter_light"
+        android:text="Dealer Cards"
+        android:textColor="#B69D48"
+        android:textSize="23sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="229dp"
@@ -20,17 +34,20 @@
 
     <Button
         android:id="@+id/doubleButton"
-        android:layout_width="109dp"
-        android:layout_height="62dp"
+        android:layout_width="105dp"
+        android:layout_height="43dp"
+        android:background="@drawable/roundedcorner"
         android:backgroundTint="#636E83"
+        android:fontFamily="@font/inter_extralight"
         android:text="Double"
-        android:textSize="19sp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.947"
+        app:layout_constraintHorizontal_bias="0.944"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.612" />
+        app:layout_constraintVertical_bias="0.658" />
 
     <ImageView
         android:id="@+id/betChip13"
@@ -283,29 +300,18 @@
     <Button
         android:id="@+id/dealButton"
         android:layout_width="109dp"
-        android:layout_height="62dp"
+        android:layout_height="45dp"
+        android:background="@drawable/roundedcorner"
         android:backgroundTint="#636E83"
+        android:fontFamily="@font/inter_light"
         android:text="Deal"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.505" />
-
-    <Button
-        android:id="@+id/homeButton2"
-        android:layout_width="82dp"
-        android:layout_height="56dp"
-        android:backgroundTint="#31473A"
-        app:icon="@drawable/homesymbol"
-        app:iconSize="45dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.984"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.007" />
 
     <ImageView
         android:id="@+id/dealerCard1"
@@ -364,37 +370,44 @@
 
     <TextView
         android:id="@+id/textViewDealer"
-        android:layout_width="44dp"
-        android:layout_height="32dp"
+        android:layout_width="51dp"
+        android:layout_height="39dp"
+        android:fontFamily="@font/inter_extralight"
         android:textColor="#FFFFFF"
-        android:textSize="25sp"
+        android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.04"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45" />
+        app:layout_constraintVertical_bias="0.46" />
 
     <Button
         android:id="@+id/hitButton"
-        android:layout_width="109dp"
-        android:layout_height="62dp"
+        android:layout_width="105dp"
+        android:layout_height="43dp"
+        android:background="@drawable/roundedcorner"
         android:backgroundTint="#636E83"
+        android:fontFamily="@font/inter_extralight"
         android:text="Hit"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.943"
+        app:layout_constraintHorizontal_bias="0.944"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.721" />
+        app:layout_constraintVertical_bias="0.752" />
 
     <Button
         android:id="@+id/standButton"
-        android:layout_width="109dp"
-        android:layout_height="62dp"
+        android:layout_width="105dp"
+        android:layout_height="43dp"
+        android:background="@drawable/roundedcorner"
         android:backgroundTint="#636E83"
+        android:fontFamily="@font/inter_extralight"
         android:text="Stand"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -460,21 +473,23 @@
 
     <TextView
         android:id="@+id/textViewPlayer"
-        android:layout_width="44dp"
-        android:layout_height="32dp"
+        android:layout_width="50dp"
+        android:layout_height="35dp"
+        android:fontFamily="@font/inter_extralight"
         android:textColor="#FFFFFF"
-        android:textSize="25sp"
+        android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.04"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.55" />
+        app:layout_constraintVertical_bias="0.53" />
 
     <TextView
         android:id="@+id/winLoseText"
         android:layout_width="151dp"
         android:layout_height="49dp"
+        android:fontFamily="@font/inter_light"
         android:textColor="#FFFFFF"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -501,6 +516,7 @@
         android:id="@+id/balanceTextView"
         android:layout_width="109dp"
         android:layout_height="33dp"
+        android:fontFamily="@font/inter_extralight"
         android:text="TextView"
         android:textColor="@color/white"
         android:textSize="25sp"
@@ -538,15 +554,27 @@
 
     <ImageView
         android:id="@+id/betweenImageView"
-        android:layout_width="44dp"
-        android:layout_height="32dp"
+        android:layout_width="40dp"
+        android:layout_height="2dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.505"
-        app:srcCompat="@drawable/screenshot_2023_12_05_at_11_03_30_removebg_preview" />
+        app:srcCompat="@drawable/newline_2" />
+
+    <ImageButton
+        android:id="@+id/homeButton2"
+        android:layout_width="65dp"
+        android:layout_height="29dp"
+        android:backgroundTint="#31473A"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.00999999"
+        app:srcCompat="@drawable/newarrow_2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

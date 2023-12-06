@@ -19,6 +19,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.graphics.Path
+import android.media.Image
 import android.util.DisplayMetrics
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
@@ -140,7 +141,7 @@ class PlayActivity : AppCompatActivity() {
 
         val hitButton = findViewById<Button>(R.id.hitButton)
         val standButton = findViewById<Button>(R.id.standButton)
-        val homeButton = findViewById<Button>(R.id.homeButton2)
+        val homeButton = findViewById<ImageButton>(R.id.homeButton2)
         val dealButton = findViewById<Button>(R.id.dealButton)
         val bet20Button = findViewById<ImageButton>(R.id.chip20Button)
         val bet50Button = findViewById<ImageButton>(R.id.chip50Button)
