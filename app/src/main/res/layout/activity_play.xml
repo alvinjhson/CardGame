@@ -487,13 +487,14 @@
 
     <TextView
         android:id="@+id/winLoseText"
-        android:layout_width="151dp"
+        android:layout_width="200dp"
         android:layout_height="49dp"
         android:fontFamily="@font/inter_light"
         android:textColor="#FFFFFF"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.32999998" />

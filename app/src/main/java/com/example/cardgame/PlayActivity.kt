@@ -78,6 +78,7 @@ class PlayActivity : AppCompatActivity() {
     var gameOver : Boolean = false
     var winner : Boolean = false
     var draw : Boolean = false
+    var blackJack : Boolean = false
     var playerWins = 0
     var totalChipsWon = 0
     var dealerWins = 0
@@ -85,6 +86,7 @@ class PlayActivity : AppCompatActivity() {
     var roundsPlayed = 0
     var playerPot : Int = 0
     var checkWin : Boolean = false
+
 
 
     var chips = mutableListOf<Player>(
@@ -149,7 +151,6 @@ class PlayActivity : AppCompatActivity() {
         val doubleButton = findViewById<Button>(R.id.doubleButton)
         val lineImage = findViewById<ImageView>(R.id.betweenImageView)
 
-
         val imgLine = AnimationUtils.loadAnimation(this,R.anim.imgline)
         val btHit = AnimationUtils.loadAnimation(this,R.anim.bthit)
         val btStand = AnimationUtils.loadAnimation(this,R.anim.btstand)
@@ -158,8 +159,6 @@ class PlayActivity : AppCompatActivity() {
         val img50 = AnimationUtils.loadAnimation(this,R.anim.img50)
         val img100 = AnimationUtils.loadAnimation(this,R.anim.img100)
         val txtBalance = AnimationUtils.loadAnimation(this,R.anim.txtbalance)
-
-
 
         hitButton.startAnimation(btHit)
         dealButton.startAnimation(btDeal)
@@ -170,9 +169,6 @@ class PlayActivity : AppCompatActivity() {
         balanceTextView.startAnimation(txtBalance)
         lineImage.startAnimation(imgLine)
         playerImage.startAnimation(imgLine)
-
-
-
 
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
         dealerCards = listOf(dealerCard1,dealerCard2,dealerCard3,dealerCard4,dealerCard5)
@@ -186,8 +182,6 @@ class PlayActivity : AppCompatActivity() {
         roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
         chips[0].balance = sharedPref.getInt("playerBalance", 0)
         totalChipsWon = sharedPref.getInt("totalChipsWon", 0)
-
-
 
         betChips(chips[0])
         playerBalanceTextView()
@@ -252,9 +246,11 @@ class PlayActivity : AppCompatActivity() {
                 gameOver = true
                 winner = true
                 checkWin = true
+                blackJack = true
                 resetGame()
             } else if (dealerValue == 21) {
                 gameOver = true
+                blackJack = true
                 dealerWins++
                 winner = false
                 checkWin = true
@@ -654,7 +650,11 @@ class PlayActivity : AppCompatActivity() {
 
     fun winLoseText() {
         val txtBalance = AnimationUtils.loadAnimation(this,R.anim.txtbalance)
-        if (draw){
+       if (blackJack == true){
+           textViewWinLose.startAnimation(txtBalance)
+           textViewWinLose.text = "Black Jack"
+       }
+        else if (draw){
             textViewWinLose.startAnimation(txtBalance)
             textViewWinLose.text = "Draw"
         }
@@ -715,6 +715,7 @@ class PlayActivity : AppCompatActivity() {
             dealButton.visibility = View.VISIBLE
             doubleButton.visibility = View.GONE
             checkWin = false
+            blackJack = false
         }, 2000)
     }
 }
