@@ -78,7 +78,7 @@ class StatisticActivity2 : AppCompatActivity() {
         totalChipsWonView.text = "Total Chips Won $totalChipWon"
     }
     fun showPlayerName() {
-       val name = play.chips[0].name
+       val name = play.playersList[0].name
         playerNameView.text = "$name"
 
     }
