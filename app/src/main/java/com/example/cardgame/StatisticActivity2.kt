@@ -141,4 +141,8 @@ class StatisticActivity2 : AppCompatActivity() {
         playerNameView.text = "$name"
 
     }
+    fun setPlayerImg(imageView: ImageView) {
+        setPlayerView = imageView
+
+    }
 }

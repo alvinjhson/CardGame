@@ -528,17 +528,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <ImageView
-        android:id="@+id/playerImageView"
-        android:layout_width="52dp"
-        android:layout_height="51dp"
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:background="#31473A"
+        app:cardCornerRadius="47.5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.96"
-        app:srcCompat="@drawable/_e4fd3fd8f2aff9c26b15c1f1c23b11e_removebg_preview" />
+        app:layout_constraintVertical_bias="0.96">
+
+        <ImageView
+            android:id="@+id/playerImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/_e4fd3fd8f2aff9c26b15c1f1c23b11e_removebg_preview" />
+
+
+    </androidx.cardview.widget.CardView>
 
     <ImageView
         android:id="@+id/imageView5"
