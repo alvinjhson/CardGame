@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -25,6 +26,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.TranslateAnimation
+import androidx.cardview.widget.CardView
+import java.io.File
 
 
 class PlayActivity : AppCompatActivity() {
@@ -102,6 +105,10 @@ class PlayActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
+
+
+
+
         textViewPlayer = findViewById(R.id.textViewPlayer)
         textViewDealer = findViewById(R.id.textViewDealer)
         textViewWinLose = findViewById(R.id.winLoseText)
@@ -147,6 +154,7 @@ class PlayActivity : AppCompatActivity() {
         val bet100Button = findViewById<ImageButton>(R.id.chip100Button)
         val doubleButton = findViewById<Button>(R.id.doubleButton)
         val lineImage = findViewById<ImageView>(R.id.betweenImageView)
+        val cardView = findViewById<CardView>(R.id.cardView)
 
         val imgLine = AnimationUtils.loadAnimation(this,R.anim.imgline)
         val btHit = AnimationUtils.loadAnimation(this,R.anim.bthit)
@@ -156,6 +164,8 @@ class PlayActivity : AppCompatActivity() {
         val img50 = AnimationUtils.loadAnimation(this,R.anim.img50)
         val img100 = AnimationUtils.loadAnimation(this,R.anim.img100)
         val txtBalance = AnimationUtils.loadAnimation(this,R.anim.txtbalance)
+        val cardViewAnim = AnimationUtils.loadAnimation(this,R.anim.cardview)
+
 
         hitButton.startAnimation(btHit)
         dealButton.startAnimation(btDeal)
@@ -166,6 +176,7 @@ class PlayActivity : AppCompatActivity() {
         balanceTextView.startAnimation(txtBalance)
         lineImage.startAnimation(imgLine)
         playerImage.startAnimation(imgLine)
+        cardView.startAnimation(cardViewAnim)
 
         playerCards = listOf(playerCard1, playerCard2,playerCard3,playerCard4,playerCard5)
         dealerCards = listOf(dealerCard1,dealerCard2,dealerCard3,dealerCard4,dealerCard5)
@@ -179,6 +190,17 @@ class PlayActivity : AppCompatActivity() {
         roundsPlayed = sharedPref.getInt("roundsPlayed", 0)
         playersList[0].balance = sharedPref.getInt("playerBalance", 0)
         totalChipsWon = sharedPref.getInt("totalChipsWon", 0)
+
+        val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        val imagePath = sharedPreferences.getString("ImagePath", null)
+        if (imagePath != null) {
+            val imageFile = File(imagePath)
+            if (imageFile.exists()) {
+                val bitmap = BitmapFactory.decodeFile(imagePath)
+                val imageView = findViewById<ImageView>(R.id.playerImageView)
+                imageView.setImageBitmap(bitmap)
+            }
+        }
 
         betChips(playersList[0])
         playerBalanceTextView()
