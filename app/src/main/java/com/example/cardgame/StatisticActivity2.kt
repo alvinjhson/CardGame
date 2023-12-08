@@ -81,7 +81,7 @@ class StatisticActivity2 : AppCompatActivity() {
             showdealerWins(dealerWins)
             showDraws(draws)
             showRoundsPlayed(roundsPlayed)
-            showPlayerBalance(playerBalance)git s
+            showPlayerBalance(playerBalance)
             showTotalChipsWon(totalChipsWon)
 
 
