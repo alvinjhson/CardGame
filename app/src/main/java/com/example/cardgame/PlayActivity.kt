@@ -202,6 +202,10 @@ class PlayActivity : AppCompatActivity() {
             }
         }
 
+        balanceTextView.setOnClickListener {
+            addBalance()
+        }
+
         betChips(playersList[0])
         playerBalanceTextView()
         doubleButton.visibility = View.GONE
@@ -665,6 +669,10 @@ class PlayActivity : AppCompatActivity() {
         var win = bet * 2
         player.balance += win
         totalChipsWon += win
+    }
+    fun addBalance(){
+        playersList[0].balance +=1000
+        playerBalanceTextView()
     }
 
     fun winLoseText() {

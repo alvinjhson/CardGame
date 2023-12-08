@@ -22,6 +22,7 @@ import androidx.core.content.PackageManagerCompat
 import org.w3c.dom.Text
 import android.Manifest
 import android.graphics.BitmapFactory
+import android.media.Image
 import android.opengl.Visibility
 import android.widget.EditText
 import java.io.File
@@ -80,8 +81,9 @@ class StatisticActivity2 : AppCompatActivity() {
             showdealerWins(dealerWins)
             showDraws(draws)
             showRoundsPlayed(roundsPlayed)
-            showPlayerBalance(playerBalance)
+            showPlayerBalance(playerBalance)git s
             showTotalChipsWon(totalChipsWon)
+
 
         playerEditTextView.visibility = View.GONE
        playerNameView.setOnClickListener {
