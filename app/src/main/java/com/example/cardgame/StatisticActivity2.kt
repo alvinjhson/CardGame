@@ -22,19 +22,17 @@ import androidx.core.content.PackageManagerCompat
 import org.w3c.dom.Text
 import android.Manifest
 import android.graphics.BitmapFactory
+import android.opengl.Visibility
+import android.widget.EditText
 import java.io.File
 import java.io.FileOutputStream
 
 
 class StatisticActivity2 : AppCompatActivity() {
 
-    var play = PlayActivity()
-
     companion object {
         val IMAGE_REQUEST_CODE = 1_000;
-        val MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1_001;
     }
-
     lateinit var playerWinsView : TextView
     lateinit var dealerWinsView : TextView
     lateinit var roundsPlayedWins : TextView
@@ -43,6 +41,7 @@ class StatisticActivity2 : AppCompatActivity() {
     lateinit var totalChipsWonView: TextView
     lateinit var playerNameView : TextView
     lateinit var setPlayerView : ImageView
+    lateinit var playerEditTextView: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +54,7 @@ class StatisticActivity2 : AppCompatActivity() {
         playerBalanceView = findViewById(R.id.playerBalanceView)
         totalChipsWonView = findViewById(R.id.totalChipsWonView)
         playerNameView = findViewById(R.id.playerTextView)
+        playerEditTextView = findViewById(R.id.editTextText)
 
         val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
         val imagePath = sharedPreferences.getString("ImagePath", null)
@@ -65,6 +65,9 @@ class StatisticActivity2 : AppCompatActivity() {
                 setPlayerView.setImageBitmap(bitmap)
             }
         }
+        val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        playerNameView.text = sharedPref.getString("playerName", "name")
+
         val homeButton = findViewById<ImageButton>(R.id.homeButton)
         val playerWins = intent.getIntExtra("playerWins", 0)
         val dealerWins = intent.getIntExtra("dealerWins", 0)
@@ -79,8 +82,15 @@ class StatisticActivity2 : AppCompatActivity() {
             showRoundsPlayed(roundsPlayed)
             showPlayerBalance(playerBalance)
             showTotalChipsWon(totalChipsWon)
-            showPlayerName()
 
+        playerEditTextView.visibility = View.GONE
+       playerNameView.setOnClickListener {
+           playerNameView.visibility = View.GONE
+           playerEditTextView.visibility = View.VISIBLE
+           playerEditTextView.setOnClickListener {
+               setPlayerName()
+           }
+        }
         setPlayerView.setOnClickListener {
             pickImageFromGallery()
         }
@@ -89,6 +99,16 @@ class StatisticActivity2 : AppCompatActivity() {
                 startActivity(intent)
             }
     }
+
+    override fun onStop() {
+        super.onStop()
+        val sharedPref = getSharedPreferences("MyApp", Context.MODE_PRIVATE)
+        with (sharedPref.edit()) {
+            putString("playerName", playerNameView.text.toString())
+            apply()
+        }
+    }
+
     private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
        intent.type = "image/*"
@@ -136,13 +156,10 @@ class StatisticActivity2 : AppCompatActivity() {
         val totalChipWon = totalChipsWon.toString()
         totalChipsWonView.text = "Total Chips Won $totalChipWon"
     }
-    fun showPlayerName() {
-       val name = play.playersList[0].name
+    fun setPlayerName (){
+        var name = playerEditTextView.text.toString()
         playerNameView.text = "$name"
-
-    }
-    fun setPlayerImg(imageView: ImageView) {
-        setPlayerView = imageView
-
+        playerNameView.visibility = View.VISIBLE
+        playerEditTextView.visibility = View.GONE
     }
 }
